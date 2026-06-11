@@ -4,7 +4,7 @@
  */
 
 class GiniAPIClient {
-    constructor(baseURL = 'http://localhost:8000') {
+    constructor(baseURL = 'https://gini-ag1b.onrender.com') {
         this.baseURL = baseURL;
         this.headers = {
             'Content-Type': 'application/json',
