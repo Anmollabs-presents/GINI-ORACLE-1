@@ -5,7 +5,7 @@
 
 class GiniAssistantApp {
     constructor() {
-        this.api = new GiniAPIClient('localhost:8000');
+        this.api = new GiniAPIClient('https://gini-ag1b.onrender.com');
         this.stateManager = new AssistantStateManager();
         this.ui = new AssistantUIManager();
 
