@@ -241,7 +241,163 @@ class WakeWordDetector:
     def is_running(self) -> bool:
         return self._thread is not None and self._thread.is_alive()
 
+    @property
+    def state(self) -> DetectorState:
+        return self._state
+
+    @property
+    def trigger_count(self) -> int:
+        return self._trigger_count
+
+    def status(self) -> dict:
+        return {
+            "state": self._state.value if isinstance(self._state, DetectorState) else self._state,
+            "running": self.is_running(),
+            "phrases": list(self.config.wake_phrases),
+            "trigger_count": self._trigger_count,
+            "cooldown_seconds": self.config.cooldown_seconds,
+            "energy_threshold": self._energy_threshold,
+            "min_confidence": self.config.min_confidence,
+        }
+
+    def add_phrase(self, phrase: str) -> None:
+        self.config.wake_phrases.add(phrase.lower().strip())
+        self._matcher = PhraseMatcher(self.config.wake_phrases, self.config.min_confidence)
+
+    def remove_phrase(self, phrase: str) -> None:
+        p = phrase.lower().strip()
+        if p in self.config.wake_phrases:
+            self.config.wake_phrases.remove(p)
+        self._matcher = PhraseMatcher(self.config.wake_phrases, self.config.min_confidence)
+
+    def set_sensitivity(self, threshold: int) -> None:
+        self._energy_threshold = max(50, threshold)
+
+    def _lazy_init_recognizer(self) -> None:
+        if self._recognizer is None:
+            try:
+                from voice.speech_recognizer import create_recognizer
+                self._recognizer = create_recognizer(self.audio_config)
+                if hasattr(self._recognizer, "load"):
+                    self._recognizer.load()
+            except Exception as e:
+                log.error(f"Failed to lazy init recognizer: {e}")
+
     # ── Main detection loop ───────────────────────────────────
+
+    def _detection_loop(self) -> None:
+        """Continuously stream chunks from microphone and detect wake word."""
+        self._state = DetectorState.IDLE
+        if self.on_listening:
+            try:
+                self.on_listening()
+            except Exception as e:
+                log.error(f"on_listening error: {e}")
+
+        # Stream chunks generator
+        try:
+            # WakeWordDetector doesn't select devices, it uses capture backend default.
+            # PyAudioCapture selects device on capture(device_index), but stream_chunks might need it if passed.
+            chunk_gen = self._capture.stream_chunks()
+        except Exception as e:
+            log.error(f"Failed to stream chunks: {e}")
+            self._state = DetectorState.STOPPED
+            return
+
+        # Buffer variables
+        self._audio_buffer = []
+        speech_started = False
+        silence_chunks = 0
+        
+        # Calculate how many silence chunks to accept before stop buffering
+        silence_limit = int(
+            self.audio_config.pause_threshold
+            * self.audio_config.sample_rate
+            / self.audio_config.chunk_size
+        )
+        
+        # Max buffer size in chunks
+        max_chunks = int(
+            self.config.max_buffer_duration
+            * self.audio_config.sample_rate
+            / self.audio_config.chunk_size
+        )
+
+        for chunk in chunk_gen:
+            if self._stop_event.is_set():
+                break
+
+            # Stage 1 — Energy gate
+            is_speech = chunk.rms_energy > self._energy_threshold
+
+            if is_speech:
+                if not speech_started:
+                    speech_started = True
+                    self._buffer_start_time = chunk.timestamp
+                    self._state = DetectorState.ACTIVE
+                self._audio_buffer.append(chunk.data)
+                silence_chunks = 0
+                
+                # Keep buffer capped to max duration
+                if len(self._audio_buffer) > max_chunks:
+                    self._audio_buffer.pop(0)
+            elif speech_started:
+                self._audio_buffer.append(chunk.data)
+                silence_chunks += 1
+                
+                if silence_chunks >= silence_limit:
+                    # Silence detected — run phrase match (Stage 2)
+                    self._state = DetectorState.MATCHING
+                    raw_audio = b"".join(self._audio_buffer)
+                    duration = len(raw_audio) / (
+                        self.audio_config.sample_rate
+                        * self.audio_config.channels
+                        * self.audio_config.sample_width
+                    )
+                    
+                    if duration >= self.audio_config.phrase_min_duration:
+                        # Construct CapturedAudio
+                        captured = CapturedAudio(
+                            frames=raw_audio,
+                            sample_rate=self.audio_config.sample_rate,
+                            channels=self.audio_config.channels,
+                            sample_width=self.audio_config.sample_width,
+                            duration_seconds=duration,
+                            peak_energy=max(self._energy_threshold, chunk.rms_energy),
+                        )
+                        
+                        # Detect wake word
+                        event = self.detect(captured)
+                        if event:
+                            now = time.time()
+                            # Stage 3 — Cooldown
+                            if now - self._last_trigger_time >= self.config.cooldown_seconds:
+                                self._trigger_count += 1
+                                self._last_trigger_time = now
+                                log.info(f"🎯 Wake word detected: {event}")
+                                if self.on_wake:
+                                    try:
+                                        self.on_wake(event)
+                                    except Exception as e:
+                                        log.error(f"on_wake callback error: {e}")
+                                self._state = DetectorState.COOLDOWN
+                                time.sleep(self.config.cooldown_seconds)
+                    
+                    # Reset buffer
+                    self._audio_buffer = []
+                    speech_started = False
+                    silence_chunks = 0
+                    self._state = DetectorState.IDLE
+                    if self.on_listening:
+                        try:
+                            self.on_listening()
+                        except Exception as e:
+                            log.error(f"on_listening error: {e}")
+
+            # Sleep slightly to prevent CPU spinning if generator doesn't block
+            time.sleep(0.001)
+
+        self._state = DetectorState.STOPPED
 
 class PhraseMatcher:
     """

@@ -21,9 +21,12 @@ import re
 from typing import Optional
 
 from utils.logger import get_logger
+from config.settings import settings
 from assistant_core.response_engine import get_response_engine
 from assistant_core.knowledge_engine import get_knowledge_engine
 from assistant_core.local_llm_adapter import get_local_llm
+from assistant_core.ai_provider import get_ai_provider
+from assistant_core.identity import IdentityManager
 
 log = get_logger(__name__)
 
@@ -60,6 +63,7 @@ async def dispatch(
     history: list = None,
     memory=None,
     user_id: str = "default",
+    session_id: Optional[str] = None,
     routing_engine=None,
 ) -> str:
     """
@@ -83,62 +87,88 @@ async def dispatch(
         log.debug(f"ResponseEngine handled: '{text[:40]}'")
         return _apply_emotion_tone(response, emotion, emotion_trend)
 
-    # ── STAGE 2: Routing engine (commands + Q&A handler) ─────
+    # ── STAGE 2: Routing engine (commands + memory actions) ─────
+    intent = "unknown"
+    confidence = 0.0
+    routed_response = ""
+
     if routing_engine is not None:
         try:
             route_result = await routing_engine.route(
-                text, user_id=user_id, session_id=None
+                text, user_id=user_id, session_id=session_id
             )
             intent = route_result.intent
             confidence = route_result.confidence
             routed_response = route_result.response
 
-            # Command intents: always use the routing result
+            # Command intents: always use the routing result if confidence is high
             if intent in _COMMAND_INTENTS and confidence >= 0.55:
                 log.debug(f"RoutingEngine [{intent}@{confidence:.2f}] handled: '{text[:40]}'")
                 return _apply_emotion_tone(routed_response, emotion, emotion_trend)
 
-            # Q&A intent at high confidence — try knowledge engine first
-            # for a richer answer, fall back to routing result
-            if intent == "question_answer" and confidence >= 0.55:
-                know_answer, know_conf = get_knowledge_engine().query(text)
-                if know_answer and know_conf >= 0.5:
-                    log.debug(f"KnowledgeEngine answered [{know_conf:.2f}]: '{text[:40]}'")
-                    return _apply_emotion_tone(know_answer, emotion, emotion_trend)
-                # Use routing engine's own Q&A handler answer
-                if routed_response and "[LLM" not in routed_response:
-                    return _apply_emotion_tone(routed_response, emotion, emotion_trend)
-
         except Exception as e:
             log.warning(f"RoutingEngine dispatch error: {e}")
 
-    # ── STAGE 3: Knowledge engine (standalone) ───────────────
-    if _KNOWLEDGE_TRIGGERS.search(text):
-        know_answer, know_conf = get_knowledge_engine().query(text)
-        if know_answer and know_conf >= 0.5:
-            log.debug(f"KnowledgeEngine answered [{know_conf:.2f}]: '{text[:40]}'")
-            return _apply_emotion_tone(know_answer, emotion, emotion_trend)
+    # ── STAGE 3: AI Reasoning Layer (with local fallback) ────
+    use_ai = False
+    provider_name = settings.ai_provider.lower()
+    if provider_name in ("ollama", "local"):
+        use_ai = True
+    elif settings.api_key:
+        use_ai = True
 
-    # ── STAGE 4: Optional local LLM ──────────────────────────
-    llm = get_local_llm()
-    if llm:
+    if use_ai:
         try:
-            system_prompt = (
-                "You are Gini, a helpful local AI assistant. "
-                "Answer concisely and helpfully. "
-                "You run completely offline with no internet access."
-            )
-            llm_response = llm.generate(text, system=system_prompt)
-            if llm_response:
-                log.debug(f"LocalLLM answered: '{text[:40]}'")
-                return _apply_emotion_tone(llm_response, emotion, emotion_trend)
-        except Exception as e:
-            log.warning(f"LocalLLM error: {e}")
+            # Check if we have an active topic in history
+            active_topic = None
+            if memory and session_id:
+                active_topic = memory.get_active_topic(session_id)
 
-    # ── STAGE 5: Fallback ─────────────────────────────────────
+            # Retrieve relevant memories
+            memories = {}
+            if memory:
+                memories = memory.get_relevant_memories(user_id, text, active_topic=active_topic)
+
+            # Generate system prompt instruction
+            system_instruction = IdentityManager.get_system_instruction(memories)
+
+            ai_provider = get_ai_provider()
+            cleaned_history = []
+            for turn in history:
+                role = turn.get("role")
+                if role in ("user", "assistant", "model"):
+                    cleaned_history.append({
+                        "role": "user" if role == "user" else "assistant",
+                        "content": turn.get("content", "")
+                    })
+
+            ai_response = await ai_provider.generate_response(
+                prompt=text,
+                system_instruction=system_instruction,
+                history=cleaned_history,
+            )
+            if ai_response:
+                log.info(f"AI Provider ({settings.ai_provider}) successfully generated response.")
+                return _apply_emotion_tone(ai_response, emotion, emotion_trend)
+        except Exception as e:
+            log.warning(f"AI Provider failed: {e}. Falling back to local intelligence.")
+
+    # ── STAGE 4: Local Factual/Knowledge Fallback ────────────
+    # 1. Standalone Knowledge Engine
+    know_answer, know_conf = get_knowledge_engine().query(text)
+    if know_answer and know_conf >= 0.5:
+        log.debug(f"KnowledgeEngine fallback answered [{know_conf:.2f}]: '{text[:40]}'")
+        return _apply_emotion_tone(know_answer, emotion, emotion_trend)
+
+    # 2. Q&A Handler from Routing Engine if available
+    if routed_response and "[LLM" not in routed_response:
+        log.debug("RoutingEngine Q&A Handler fallback used.")
+        return _apply_emotion_tone(routed_response, emotion, emotion_trend)
+
+    # ── STAGE 5: Hard Fallback ────────────────────────────────
     fb = _FALLBACK_RESPONSES[_fb_idx % len(_FALLBACK_RESPONSES)]
     _fb_idx += 1
-    log.debug(f"Fallback used for: '{text[:40]}'")
+    log.debug(f"Hard Fallback used for: '{text[:40]}'")
     return _apply_emotion_tone(fb, emotion, emotion_trend)
 
 

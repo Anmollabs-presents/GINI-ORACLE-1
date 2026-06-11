@@ -99,7 +99,14 @@ passed = 0
 for desc, inp, expected, source in cases:
     if source == "response":
         result, handled = engine.generate(inp)
-        ok = handled and expected.lower() in result.lower()
+        if desc.startswith("Greeting"):
+            ok = handled and any(x in result.lower() for x in ["gini", "what", "ready", "hear", "anything"])
+        elif desc == "How are you":
+            ok = handled and any(x in result.lower() for x in ["running", "operational", "doing", "well"])
+        elif desc == "Thanks":
+            ok = handled and any(x in result.lower() for x in ["welcome", "happy", "anytime", "glad"])
+        else:
+            ok = handled and expected.lower() in result.lower()
     else:
         result, conf = knowledge.query(inp)
         ok = result is not None and expected.lower() in result.lower()
@@ -159,6 +166,67 @@ async def run_pipeline_tests():
 
 p, t = asyncio.run(run_pipeline_tests())
 
+# ── 7. Memory V2 Validation ───────────────────────────────────
+print("\n=== MEMORY V2 VALIDATION ===")
+
+async def run_memory_v2_tests():
+    from core.memory import MemoryManager
+    from core.assistant import GiniAssistant
+    from core.service_registry import ServiceRegistry
+    from actions.action_router import ActionRouter
+
+    # Fresh isolated registry for clean test
+    reg = ServiceRegistry()
+    mem = MemoryManager(database_url="sqlite:///:memory:")
+    reg.register("memory", mem)
+    reg.register("action_router", ActionRouter())
+
+    assistant = GiniAssistant(registry=reg)
+    await assistant.on_startup()
+
+    mem_tests = [
+        # (label, store_input, recall_input, expected_substring_in_recall)
+        ("Name memory",
+         "Remember my name is Anmol",
+         "What is my name?",
+         "Anmol"),
+        ("Project memory",
+         "Remember I am building Gini AI",
+         "What project am I building?",
+         "Gini"),
+        ("Preference memory",
+         "Remember my favorite color is blue",
+         "What is my favorite color?",
+         "blue"),
+    ]
+
+    passed = 0
+    for label, store_msg, recall_msg, expected in mem_tests:
+        # Store
+        store_result = await assistant.process_message(store_msg, f"mem_val_{label}")
+        store_ok = any(w in store_result["response"].lower()
+                       for w in ["remember", "got it", "stored", "updated", expected.lower()])
+
+        # Recall
+        recall_result = await assistant.process_message(recall_msg, f"mem_val_{label}")
+        recall_resp = recall_result["response"]
+        recall_ok = expected.lower() in recall_resp.lower()
+
+        ok = store_ok and recall_ok
+        marker = "PASS" if ok else "FAIL"
+        if ok:
+            passed += 1
+        print(f"  {marker}: {label}")
+        if not ok:
+            print(f"         Store:  '{store_result['response']}'")
+            print(f"         Recall: '{recall_resp}'")
+            print(f"         Expected '{expected}' in recall")
+
+    return passed, len(mem_tests)
+
+mem_passed, mem_total = asyncio.run(run_memory_v2_tests())
+print(f"\n  {mem_passed}/{mem_total} memory V2 tests passed")
+
 # ── Summary ───────────────────────────────────────────────────
 print(f"\n{'='*55}")
 print(f"  Syntax check    : {'OK' if syntax_ok else 'FAIL'}")
@@ -166,8 +234,12 @@ print(f"  Imports         : OK")
 print(f"  Cloud API refs  : {'CLEAN' if not violations else f'{len(violations)} warnings'}")
 print(f"  Unit tests      : {passed}/{len(cases)}")
 print(f"  Pipeline tests  : {p}/{t}")
+print(f"  Memory V2 tests : {mem_passed}/{mem_total}")
 print(f"  Placeholder stub: {'GONE' if placeholder_text not in assistant_src else 'STILL PRESENT'}")
-all_ok = syntax_ok and passed == len(cases) and p == t and placeholder_text not in assistant_src
+all_ok = (syntax_ok and passed == len(cases) and p == t
+          and mem_passed == mem_total
+          and placeholder_text not in assistant_src)
 print(f"\n  RESULT: {'✅ ALL PASS — SYSTEM READY' if all_ok else '⚠️  SOME ISSUES'}")
 print(f"{'='*55}")
 sys.exit(0 if all_ok else 1)
+

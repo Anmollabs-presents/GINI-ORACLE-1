@@ -137,6 +137,24 @@ class GiniAPIClient {
     }
 
     /**
+     * Fetch all memories from SQLite database
+     */
+    async getMemories(userId = 'default') {
+        try {
+            const response = await this._fetchWithTimeout(`${this.baseURL}/memory?user_id=${userId}`, {
+                method: 'GET',
+                headers: this.headers,
+            });
+
+            if (!response.ok) throw new Error(`Status ${response.status}`);
+            return await response.json();
+        } catch (error) {
+            console.error('Failed to get memories:', error);
+            return [];
+        }
+    }
+
+    /**
      * Get plugin list
      */
     async getPlugins() {

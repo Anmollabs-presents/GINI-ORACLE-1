@@ -50,6 +50,8 @@ class ParsedCommand:
     entities: Dict[str, Any] = field(default_factory=dict)   # Extracted entities
     char_count: int = 0
     word_count: int = 0
+    user_id: str = "default"
+    session_id: Optional[str] = None
 
     def has_any(self, *words: str) -> bool:
         """Check if any of the given words appear in tokens."""
@@ -76,13 +78,13 @@ class CommandParser:
     Stateless — safe to reuse across requests.
     """
 
-    def parse(self, raw_input: str) -> ParsedCommand:
+    def parse(self, raw_input: str, user_id: str = "default", session_id: Optional[str] = None) -> ParsedCommand:
         """
         Main parse entry point.
         Returns a ParsedCommand even for empty/invalid input.
         """
         if not raw_input or not raw_input.strip():
-            return self._empty_command(raw_input or "")
+            return self._empty_command(raw_input or "", user_id, session_id)
 
         # ── Normalize ─────────────────────────────────────────
         normalized = self._normalize(raw_input)
@@ -110,6 +112,8 @@ class CommandParser:
             entities=entities,
             char_count=len(normalized),
             word_count=len(tokens),
+            user_id=user_id,
+            session_id=session_id,
         )
 
         log.debug(
@@ -168,7 +172,7 @@ class CommandParser:
                 found.append(room)
         return found
 
-    def _empty_command(self, raw: str) -> ParsedCommand:
+    def _empty_command(self, raw: str, user_id: str = "default", session_id: Optional[str] = None) -> ParsedCommand:
         return ParsedCommand(
             raw=raw,
             normalized="",
@@ -178,6 +182,8 @@ class CommandParser:
             entities={},
             char_count=0,
             word_count=0,
+            user_id=user_id,
+            session_id=session_id,
         )
 
 

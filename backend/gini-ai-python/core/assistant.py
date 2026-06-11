@@ -171,6 +171,8 @@ class GiniAssistant:
                 emotion=emotion,
                 emotion_trend=emotion_trend,
                 history=history,
+                user_id=user_id,
+                session_id=active_session_id,
             )
 
         # ── 6. Store assistant turn in memory ─────────────────
@@ -195,17 +197,17 @@ class GiniAssistant:
         emotion: str,
         emotion_trend: str,
         history: list,
+        user_id: str = "default",
+        session_id: Optional[str] = None,
     ) -> str:
         """
-        Generate Gini's response via the LOCAL intelligence stack.
-        No cloud APIs. No API keys. Works 100% offline.
+        Generate Gini's response via the LOCAL/AI hybrid intelligence stack.
 
         Pipeline:
           1. ResponseEngine  — greetings, small talk, time, date, math
           2. RoutingEngine   — commands (app, web, system, media, utility, memory)
-          3. KnowledgeEngine — factual questions
-          4. LocalLLM        — optional Ollama (if LOCAL_LLM_ENABLED=true)
-          5. Fallback        — helpful "I don't know yet" message
+          3. AI Provider     — general reasoning & knowledge using retrieved memories
+          4. Fallbacks       — local knowledge database & fallback template
         """
         routing_engine = None
         action_router = self._registry.resolve_optional("action_router")
@@ -218,7 +220,8 @@ class GiniAssistant:
             emotion_trend=emotion_trend,
             history=history,
             memory=self._registry.resolve_optional("memory"),
-            user_id="default",
+            user_id=user_id,
+            session_id=session_id,
             routing_engine=routing_engine,
         )
 

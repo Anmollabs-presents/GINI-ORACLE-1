@@ -16,10 +16,10 @@
 
 === FUNCTIONAL TESTS ===
   PASS: Greeting
-  FAIL: Greeting hi | input='hi' | expected 'what' in 'Hello! I'm Gini, your local AI assistant. Ask me anything.'
-  FAIL: How are you | input='how are you' | expected 'well' in 'I'm running great, thanks for asking! What can I help with?'
+  PASS: Greeting hi
+  PASS: How are you
   PASS: Identity
-  FAIL: Thanks | input='thank you' | expected 'welcome' in 'Happy to help! Let me know if you need anything else.'
+  PASS: Thanks
   PASS: Math add
   PASS: Math multiply
   PASS: Time query
@@ -32,156 +32,115 @@
   PASS: Machine learning
   PASS: Algorithm
 
-  13/16 functional tests passed
+  16/16 functional tests passed
 
 === PLACEHOLDER CHECK ===
   OK  No placeholder stub text in core/assistant.py
 
 === ASYNC PIPELINE TEST ===
-[32m2026-06-10 20:27:51[0m | [1mINFO    [0m | [36mutils.event_logger[0m | [1m[LIFECYCLE] assistant.complete component=GiniAssistant[0m
---- Logging error in Loguru Handler #1 ---
-Record was: {'elapsed': datetime.timedelta(seconds=1, microseconds=803133), 'exception': None, 'extra': {'module': 'actions.process_manager'}, 'file': (name='process_manager.py', path='C:\\anmol\\HELL MARRY\\GINI-ORACLE-1-resilience\\GINI-ORACLE-1\\backend\\gini-ai-python\\actions\\process_manager.py'), 'function': '__init__', 'level': (name='INFO', no=20, icon='\u2139\ufe0f'), 'line': 107, 'message': '\u2699\ufe0f ProcessManager initialized', 'module': 'process_manager', 'name': 'actions.process_manager', 'process': (id=2052, name='MainProcess'), 'thread': (id=14328, name='MainThread'), 'time': datetime(2026, 6, 10, 20, 27, 51, 336739, tzinfo=datetime.timezone(datetime.timedelta(seconds=19800), 'India Standard Time'))}
-Traceback (most recent call last):
-  File "C:\anmol\HELL MARRY\GINI-ORACLE-1-resilience\.venv\Lib\site-packages\loguru\_handler.py", line 206, in emit
-    self._sink.write(str_record)
-    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
-  File "C:\anmol\HELL MARRY\GINI-ORACLE-1-resilience\.venv\Lib\site-packages\loguru\_simple_sinks.py", line 16, in write
-    self._stream.write(message)
-    ~~~~~~~~~~~~~~~~~~^^^^^^^^^
-  File "C:\Users\Dell\AppData\Local\Programs\Python\Python314\Lib\encodings\cp1252.py", line 19, in encode
-    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
-           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-UnicodeEncodeError: 'charmap' codec can't encode characters in position 89-90: character maps to <undefined>
---- End of logging error ---
---- Logging error in Loguru Handler #1 ---
-Record was: {'elapsed': datetime.timedelta(seconds=2, microseconds=166620), 'exception': None, 'extra': {'module': 'actions.web_executor'}, 'file': (name='web_executor.py', path='C:\\anmol\\HELL MARRY\\GINI-ORACLE-1-resilience\\GINI-ORACLE-1\\backend\\gini-ai-python\\actions\\web_executor.py'), 'function': '__init__', 'level': (name='INFO', no=20, icon='\u2139\ufe0f'), 'line': 178, 'message': '\U0001f310 WebExecutor initialized', 'module': 'web_executor', 'name': 'actions.web_executor', 'process': (id=2052, name='MainProcess'), 'thread': (id=14328, name='MainThread'), 'time': datetime(2026, 6, 10, 20, 27, 51, 700226, tzinfo=datetime.timezone(datetime.timedelta(seconds=19800), 'India Standard Time'))}
-Traceback (most recent call last):
-  File "C:\anmol\HELL MARRY\GINI-ORACLE-1-resilience\.venv\Lib\site-packages\loguru\_handler.py", line 206, in emit
-    self._sink.write(str_record)
-    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
-  File "C:\anmol\HELL MARRY\GINI-ORACLE-1-resilience\.venv\Lib\site-packages\loguru\_simple_sinks.py", line 16, in write
-    self._stream.write(message)
-    ~~~~~~~~~~~~~~~~~~^^^^^^^^^
-  File "C:\Users\Dell\AppData\Local\Programs\Python\Python314\Lib\encodings\cp1252.py", line 19, in encode
-    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
-           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f310' in position 86: character maps to <undefined>
---- End of logging error ---
---- Logging error in Loguru Handler #1 ---
-Record was: {'elapsed': datetime.timedelta(seconds=2, microseconds=172442), 'exception': None, 'extra': {'module': 'actions.routing_engine'}, 'file': (name='routing_engine.py', path='C:\\anmol\\HELL MARRY\\GINI-ORACLE-1-resilience\\GINI-ORACLE-1\\backend\\gini-ai-python\\actions\\routing_engine.py'), 'function': '__init__', 'level': (name='INFO', no=20, icon='\u2139\ufe0f'), 'line': 105, 'message': "\U0001f500 RoutingEngine initialized | handlers=['app_control', 'system_control', 'media_control', 'web_search', 'utility', 'question_answer', 'memory', 'unknown'] | threshold=0.55", 'module': 'routing_engine', 'name': 'actions.routing_engine', 'process': (id=2052, name='MainProcess'), 'thread': (id=14328, name='MainThread'), 'time': datetime(2026, 6, 10, 20, 27, 51, 706048, tzinfo=datetime.timezone(datetime.timedelta(seconds=19800), 'India Standard Time'))}
-Traceback (most recent call last):
-  File "C:\anmol\HELL MARRY\GINI-ORACLE-1-resilience\.venv\Lib\site-packages\loguru\_handler.py", line 206, in emit
-    self._sink.write(str_record)
-    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
-  File "C:\anmol\HELL MARRY\GINI-ORACLE-1-resilience\.venv\Lib\site-packages\loguru\_simple_sinks.py", line 16, in write
-    self._stream.write(message)
-    ~~~~~~~~~~~~~~~~~~^^^^^^^^^
-  File "C:\Users\Dell\AppData\Local\Programs\Python\Python314\Lib\encodings\cp1252.py", line 19, in encode
-    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
-           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f500' in position 88: character maps to <undefined>
---- End of logging error ---
---- Logging error in Loguru Handler #1 ---
-Record was: {'elapsed': datetime.timedelta(seconds=2, microseconds=179677), 'exception': None, 'extra': {'module': 'actions.action_router'}, 'file': (name='action_router.py', path='C:\\anmol\\HELL MARRY\\GINI-ORACLE-1-resilience\\GINI-ORACLE-1\\backend\\gini-ai-python\\actions\\action_router.py'), 'function': '__init__', 'level': (name='INFO', no=20, icon='\u2139\ufe0f'), 'line': 38, 'message': "\u26a1 ActionRouter initialized | modules=['smart_home', 'hospital', 'vehicle', 'mobile']", 'module': 'action_router', 'name': 'actions.action_router', 'process': (id=2052, name='MainProcess'), 'thread': (id=14328, name='MainThread'), 'time': datetime(2026, 6, 10, 20, 27, 51, 713283, tzinfo=datetime.timezone(datetime.timedelta(seconds=19800), 'India Standard Time'))}
-Traceback (most recent call last):
-  File "C:\anmol\HELL MARRY\GINI-ORACLE-1-resilience\.venv\Lib\site-packages\loguru\_handler.py", line 206, in emit
-    self._sink.write(str_record)
-    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
-  File "C:\anmol\HELL MARRY\GINI-ORACLE-1-resilience\.venv\Lib\site-packages\loguru\_simple_sinks.py", line 16, in write
-    self._stream.write(message)
-    ~~~~~~~~~~~~~~~~~~^^^^^^^^^
-  File "C:\Users\Dell\AppData\Local\Programs\Python\Python314\Lib\encodings\cp1252.py", line 19, in encode
-    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
-           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-UnicodeEncodeError: 'charmap' codec can't encode character '\u26a1' in position 87: character maps to <undefined>
---- End of logging error ---
---- Logging error in Loguru Handler #1 ---
-Record was: {'elapsed': datetime.timedelta(seconds=2, microseconds=185001), 'exception': None, 'extra': {'module': 'core.service_registry'}, 'file': (name='service_registry.py', path='C:\\anmol\\HELL MARRY\\GINI-ORACLE-1-resilience\\GINI-ORACLE-1\\backend\\gini-ai-python\\core\\service_registry.py'), 'function': 'register', 'level': (name='INFO', no=20, icon='\u2139\ufe0f'), 'line': 52, 'message': '  \U0001f4e6 Service registered: [action_router] \u2192 ActionRouter', 'module': 'service_registry', 'name': 'core.service_registry', 'process': (id=2052, name='MainProcess'), 'thread': (id=14328, name='MainThread'), 'time': datetime(2026, 6, 10, 20, 27, 51, 718607, tzinfo=datetime.timezone(datetime.timedelta(seconds=19800), 'India Standard Time'))}
-Traceback (most recent call last):
-  File "C:\anmol\HELL MARRY\GINI-ORACLE-1-resilience\.venv\Lib\site-packages\loguru\_handler.py", line 206, in emit
-    self._sink.write(str_record)
-    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
-  File "C:\anmol\HELL MARRY\GINI-ORACLE-1-resilience\.venv\Lib\site-packages\loguru\_simple_sinks.py", line 16, in write
-    self._stream.write(message)
-    ~~~~~~~~~~~~~~~~~~^^^^^^^^^
-  File "C:\Users\Dell\AppData\Local\Programs\Python\Python314\Lib\encodings\cp1252.py", line 19, in encode
-    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
-           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4e6' in position 89: character maps to <undefined>
---- End of logging error ---
---- Logging error in Loguru Handler #1 ---
-Record was: {'elapsed': datetime.timedelta(seconds=2, microseconds=190747), 'exception': None, 'extra': {'module': 'core.assistant'}, 'file': (name='assistant.py', path='C:\\anmol\\HELL MARRY\\GINI-ORACLE-1-resilience\\GINI-ORACLE-1\\backend\\gini-ai-python\\core\\assistant.py'), 'function': '__init__', 'level': (name='INFO', no=20, icon='\u2139\ufe0f'), 'line': 53, 'message': '\U0001f9e0 GiniAssistant created | v1.0.0', 'module': 'assistant', 'name': 'core.assistant', 'process': (id=2052, name='MainProcess'), 'thread': (id=14328, name='MainThread'), 'time': datetime(2026, 6, 10, 20, 27, 51, 724353, tzinfo=datetime.timezone(datetime.timedelta(seconds=19800), 'India Standard Time'))}
-Traceback (most recent call last):
-  File "C:\anmol\HELL MARRY\GINI-ORACLE-1-resilience\.venv\Lib\site-packages\loguru\_handler.py", line 206, in emit
-    self._sink.write(str_record)
-    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
-  File "C:\anmol\HELL MARRY\GINI-ORACLE-1-resilience\.venv\Lib\site-packages\loguru\_simple_sinks.py", line 16, in write
-    self._stream.write(message)
-    ~~~~~~~~~~~~~~~~~~^^^^^^^^^
-  File "C:\Users\Dell\AppData\Local\Programs\Python\Python314\Lib\encodings\cp1252.py", line 19, in encode
-    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
-           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f9e0' in position 80: character maps to <undefined>
---- End of logging error ---
---- Logging error in Loguru Handler #1 ---
-Record was: {'elapsed': datetime.timedelta(seconds=2, microseconds=198094), 'exception': None, 'extra': {'module': 'core.assistant'}, 'file': (name='assistant.py', path='C:\\anmol\\HELL MARRY\\GINI-ORACLE-1-resilience\\GINI-ORACLE-1\\backend\\gini-ai-python\\core\\assistant.py'), 'function': 'on_startup', 'level': (name='INFO', no=20, icon='\u2139\ufe0f'), 'line': 62, 'message': '\u2705 GiniAssistant is ready | Emotion engine: True', 'module': 'assistant', 'name': 'core.assistant', 'process': (id=2052, name='MainProcess'), 'thread': (id=14328, name='MainThread'), 'time': datetime(2026, 6, 10, 20, 27, 51, 731700, tzinfo=datetime.timezone(datetime.timedelta(seconds=19800), 'India Standard Time'))}
-Traceback (most recent call last):
-  File "C:\anmol\HELL MARRY\GINI-ORACLE-1-resilience\.venv\Lib\site-packages\loguru\_handler.py", line 206, in emit
-    self._sink.write(str_record)
-    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
-  File "C:\anmol\HELL MARRY\GINI-ORACLE-1-resilience\.venv\Lib\site-packages\loguru\_simple_sinks.py", line 16, in write
-    self._stream.write(message)
-    ~~~~~~~~~~~~~~~~~~^^^^^^^^^
-  File "C:\Users\Dell\AppData\Local\Programs\Python\Python314\Lib\encodings\cp1252.py", line 19, in encode
-    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
-           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-UnicodeEncodeError: 'charmap' codec can't encode character '\u2705' in position 80: character maps to <undefined>
---- End of logging error ---
---- Logging error in Loguru Handler #1 ---
-Record was: {'elapsed': datetime.timedelta(seconds=2, microseconds=203285), 'exception': None, 'extra': {'module': 'core.assistant'}, 'file': (name='assistant.py', path='C:\\anmol\\HELL MARRY\\GINI-ORACLE-1-resilience\\GINI-ORACLE-1\\backend\\gini-ai-python\\core\\assistant.py'), 'function': '_run_pipeline', 'level': (name='INFO', no=20, icon='\u2139\ufe0f'), 'line': 128, 'message': '\U0001f4e9 [test_user] \u2192 hello', 'module': 'assistant', 'name': 'core.assistant', 'process': (id=2052, name='MainProcess'), 'thread': (id=14328, name='MainThread'), 'time': datetime(2026, 6, 10, 20, 27, 51, 736891, tzinfo=datetime.timezone(datetime.timedelta(seconds=19800), 'India Standard Time'))}
-Traceback (most recent call last):
-  File "C:\anmol\HELL MARRY\GINI-ORACLE-1-resilience\.venv\Lib\site-packages\loguru\_handler.py", line 206, in emit
-    self._sink.write(str_record)
-    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
-  File "C:\anmol\HELL MARRY\GINI-ORACLE-1-resilience\.venv\Lib\site-packages\loguru\_simple_sinks.py", line 16, in write
-    self._stream.write(message)
-    ~~~~~~~~~~~~~~~~~~^^^^^^^^^
-  File "C:\Users\Dell\AppData\Local\Programs\Python\Python314\Lib\encodings\cp1252.py", line 19, in encode
-    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
-           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4e9' in position 80: character maps to <undefined>
---- End of logging error ---
---- Logging error in Loguru Handler #1 ---
-Record was: {'elapsed': datetime.timedelta(seconds=2, microseconds=280094), 'exception': None, 'extra': {'module': 'core.assistant'}, 'file': (name='assistant.py', path='C:\\anmol\\HELL MARRY\\GINI-ORACLE-1-resilience\\GINI-ORACLE-1\\backend\\gini-ai-python\\core\\assistant.py'), 'function': '_run_pipeline', 'level': (name='INFO', no=20, icon='\u2139\ufe0f'), 'line': 180, 'message': "\U0001f4ac [test_user] \u2190 Hey! I'm Gini. How can I help you today?", 'module': 'assistant', 'name': 'core.assistant', 'process': (id=2052, name='MainProcess'), 'thread': (id=14328, name='MainThread'), 'time': datetime(2026, 6, 10, 20, 27, 51, 813700, tzinfo=datetime.timezone(datetime.timedelta(seconds=19800), 'India Standard Time'))}
-Traceback (most recent call last):
-  File "C:\anmol\HELL MARRY\GINI-ORACLE-1-resilience\.venv\Lib\site-packages\loguru\_handler.py", line 206, in emit
-    self._sink.write(str_record)
-    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
-  File "C:\anmol\HELL MARRY\GINI-ORACLE-1-resilience\.venv\Lib\site-packages\loguru\_simple_sinks.py", line 16, in write
-    self._stream.write(message)
-    ~~~~~~~~~~~~~~~~~~^^^^^^^^^
-  File "C:\Users\Dell\AppData\Local\Programs\Python\Python314\Lib\encodings\cp1252.py", line 19, in encode
-    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
-           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4ac' in position 80: character maps to <undefined>
---- End of logging error ---
-Traceback (most recent call last):
-  File "C:\anmol\HELL MARRY\GINI-ORACLE-1-resilience\GINI-ORACLE-1\backend\gini-ai-python\validate_local_intel.py", line 160, in <module>
-    p, t = asyncio.run(run_pipeline_tests())
-           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\Dell\AppData\Local\Programs\Python\Python314\Lib\asyncio\runners.py", line 204, in run
-    return runner.run(main)
-           ~~~~~~~~~~^^^^^^
-  File "C:\Users\Dell\AppData\Local\Programs\Python\Python314\Lib\asyncio\runners.py", line 127, in run
-    return self._loop.run_until_complete(task)
-           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
-  File "C:\Users\Dell\AppData\Local\Programs\Python\Python314\Lib\asyncio\base_events.py", line 719, in run_until_complete
-    return future.result()
-           ~~~~~~~~~~~~~^^
-  File "C:\anmol\HELL MARRY\GINI-ORACLE-1-resilience\GINI-ORACLE-1\backend\gini-ai-python\validate_local_intel.py", line 156, in run_pipeline_tests
-    print(f"  {marker}: '{msg[:40]}' \u2192 '{response[:70]}'")
-    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\Dell\AppData\Local\Programs\Python\Python314\Lib\encodings\cp1252.py", line 19, in encode
-    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
-           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-UnicodeEncodeError: 'charmap' codec can't encode character '\u2192' in position 16: character maps to <undefined>
+[32m2026-06-11 23:07:10[0m | [1mINFO    [0m | [36mactions.process_manager[0m | [1m⚙️ ProcessManager initialized[0m
+[32m2026-06-11 23:07:10[0m | [1mINFO    [0m | [36mactions.web_executor[0m | [1m🌐 WebExecutor initialized[0m
+[32m2026-06-11 23:07:10[0m | [1mINFO    [0m | [36mactions.routing_engine[0m | [1m🔀 RoutingEngine initialized | handlers=['app_control', 'system_control', 'media_control', 'web_search', 'utility', 'question_answer', 'memory', 'unknown'] | threshold=0.55[0m
+[32m2026-06-11 23:07:10[0m | [1mINFO    [0m | [36mactions.action_router[0m | [1m⚡ ActionRouter initialized | modules=['smart_home', 'hospital', 'vehicle', 'mobile'][0m
+[32m2026-06-11 23:07:10[0m | [1mINFO    [0m | [36mcore.service_registry[0m | [1m  📦 Service registered: [action_router] → ActionRouter[0m
+[32m2026-06-11 23:07:10[0m | [1mINFO    [0m | [36mcore.assistant[0m | [1m🧠 GiniAssistant created | v1.0.0[0m
+[32m2026-06-11 23:07:10[0m | [1mINFO    [0m | [36mutils.event_logger[0m | [1m[LIFECYCLE] assistant.complete component=GiniAssistant[0m
+[32m2026-06-11 23:07:10[0m | [1mINFO    [0m | [36mcore.assistant[0m | [1m✅ GiniAssistant is ready | Emotion engine: True[0m
+[32m2026-06-11 23:07:10[0m | [1mINFO    [0m | [36mcore.assistant[0m | [1m📩 [test_user] → hello[0m
+[32m2026-06-11 23:07:10[0m | [1mINFO    [0m | [36mcore.assistant[0m | [1m💬 [test_user] ← Hi there! Ready to assist.[0m
+  PASS: 'hello' -> 'Hi there! Ready to assist.'
+[32m2026-06-11 23:07:10[0m | [1mINFO    [0m | [36mcore.assistant[0m | [1m📩 [test_user] → what is photosynthesis?[0m
+[32m2026-06-11 23:07:10[0m | [1mINFO    [0m | [36mutils.event_logger[0m | [1m[INTENT] question_answer(0.75) sub=qa rid=541b7205-4349-4ef9-9abf-38814cd92f94[0m
+[32m2026-06-11 23:07:10[0m | [1mINFO    [0m | [36mactions.routing_engine[0m | [1m⚡ Route: 'what is photosynthesis?' → question_answer(0.75)[0m
+[32m2026-06-11 23:07:11[0m | [33m[1mWARNING [0m | [36massistant_core.ai_provider[0m | [33m[1mGemini API request failed on attempt 1: Client error '400 Bad Request' for url 'https://generativelanguage.googleapis.com/v1beta/models/[VARNIMA.AI]:generateContent?key=[xai-uwoYHEQzap4W03YfrqExqTK5gDHZKuOwWaqNBrWmyNjV5Bg7yOUH6dcwp3zoHwxugtGJZ9ah4qal2RqO]'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400[0m
+[32m2026-06-11 23:07:12[0m | [33m[1mWARNING [0m | [36massistant_core.ai_provider[0m | [33m[1mGemini API request failed on attempt 2: Client error '400 Bad Request' for url 'https://generativelanguage.googleapis.com/v1beta/models/[VARNIMA.AI]:generateContent?key=[xai-uwoYHEQzap4W03YfrqExqTK5gDHZKuOwWaqNBrWmyNjV5Bg7yOUH6dcwp3zoHwxugtGJZ9ah4qal2RqO]'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400[0m
+[32m2026-06-11 23:07:15[0m | [33m[1mWARNING [0m | [36massistant_core.ai_provider[0m | [33m[1mGemini API request failed on attempt 3: Client error '400 Bad Request' for url 'https://generativelanguage.googleapis.com/v1beta/models/[VARNIMA.AI]:generateContent?key=[xai-uwoYHEQzap4W03YfrqExqTK5gDHZKuOwWaqNBrWmyNjV5Bg7yOUH6dcwp3zoHwxugtGJZ9ah4qal2RqO]'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400[0m
+[32m2026-06-11 23:07:15[0m | [31m[1mERROR   [0m | [36massistant_core.ai_provider[0m | [31m[1mGemini API error: Client error '400 Bad Request' for url 'https://generativelanguage.googleapis.com/v1beta/models/[VARNIMA.AI]:generateContent?key=[xai-uwoYHEQzap4W03YfrqExqTK5gDHZKuOwWaqNBrWmyNjV5Bg7yOUH6dcwp3zoHwxugtGJZ9ah4qal2RqO]'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400[0m
+[32m2026-06-11 23:07:15[0m | [33m[1mWARNING [0m | [36massistant_core.intent_dispatch[0m | [33m[1mAI Provider failed: Client error '400 Bad Request' for url 'https://generativelanguage.googleapis.com/v1beta/models/[VARNIMA.AI]:generateContent?key=[xai-uwoYHEQzap4W03YfrqExqTK5gDHZKuOwWaqNBrWmyNjV5Bg7yOUH6dcwp3zoHwxugtGJZ9ah4qal2RqO]'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400. Falling back to local intelligence.[0m
+[32m2026-06-11 23:07:15[0m | [1mINFO    [0m | [36mcore.assistant[0m | [1m💬 [test_user] ← Photosynthesis is the process by which plants, algae, and some bacteria convert ...[0m
+[32m2026-06-11 23:07:15[0m | [33m[1mWARNING [0m | [36mutils.event_logger[0m | [33m[1m[TIMING] ⚠️ SLOW stage=process_message elapsed=5013ms rid=None[0m
+  PASS: 'what is photosynthesis?' -> 'Photosynthesis is the process by which plants, algae, and some bacteri'
+[32m2026-06-11 23:07:15[0m | [1mINFO    [0m | [36mcore.assistant[0m | [1m📩 [test_user] → remember my name is Anmol[0m
+[32m2026-06-11 23:07:15[0m | [1mINFO    [0m | [36mutils.event_logger[0m | [1m[INTENT] memory(1.00) sub=store rid=fd5a2275-c2ef-4537-ae6f-e687a2660793[0m
+[32m2026-06-11 23:07:15[0m | [1mINFO    [0m | [36mactions.routing_engine[0m | [1m⚡ Route: 'remember my name is anmol' → memory(1.00)[0m
+[32m2026-06-11 23:07:15[0m | [1mINFO    [0m | [36mcore.assistant[0m | [1m💬 [test_user] ← Got it! I'll remember: 'Anmol'.[0m
+  PASS: 'remember my name is Anmol' -> 'Got it! I'll remember: 'Anmol'.'
+[32m2026-06-11 23:07:15[0m | [1mINFO    [0m | [36mcore.assistant[0m | [1m📩 [test_user] → calculate 10 * 5[0m
+[32m2026-06-11 23:07:15[0m | [1mINFO    [0m | [36mcore.assistant[0m | [1m💬 [test_user] ← The result is **50**.[0m
+  PASS: 'calculate 10 * 5' -> 'The result is **50**.'
+[32m2026-06-11 23:07:15[0m | [1mINFO    [0m | [36mcore.assistant[0m | [1m📩 [test_user] → open calculator[0m
+[32m2026-06-11 23:07:15[0m | [1mINFO    [0m | [36mutils.event_logger[0m | [1m[INTENT] utility(0.80) rid=e5c32fd4-7ffe-49b8-b4a7-3460bb30b256[0m
+[32m2026-06-11 23:07:15[0m | [1mINFO    [0m | [36mactions.routing_engine[0m | [1m⚡ Route: 'open calculator' → utility(0.80)[0m
+[32m2026-06-11 23:07:15[0m | [1mINFO    [0m | [36mcore.assistant[0m | [1m💬 [test_user] ← Utility command 'general' acknowledged.[0m
+  PASS: 'open calculator' -> 'Utility command 'general' acknowledged.'
+[32m2026-06-11 23:07:15[0m | [1mINFO    [0m | [36mcore.assistant[0m | [1m📩 [test_user] → search python tutorial[0m
+[32m2026-06-11 23:07:15[0m | [1mINFO    [0m | [36mutils.event_logger[0m | [1m[INTENT] web_search(1.00) sub=search rid=92822b93-16be-4ee0-91b4-7641a619d2aa[0m
+[32m2026-06-11 23:07:15[0m | [1mINFO    [0m | [36mactions.routing_engine[0m | [1m⚡ Route: 'search python tutorial' → web_search(1.00)[0m
+[32m2026-06-11 23:07:16[0m | [1mINFO    [0m | [36mactions.web_executor[0m | [1m🌐 Opened: https://www.google.com/search?q=python+tutorial[0m
+[32m2026-06-11 23:07:16[0m | [1mINFO    [0m | [36mcore.assistant[0m | [1m💬 [test_user] ← Searching Google for 'python tutorial'.[0m
+  PASS: 'search python tutorial' -> 'Searching Google for 'python tutorial'.'
+
+=== MEMORY V2 VALIDATION ===
+[32m2026-06-11 23:07:16[0m | [1mINFO    [0m | [36mcore.memory[0m | [1m🧠 MemoryManager initialized | DB=sqlite:///:memory: | Window size: 20[0m
+[32m2026-06-11 23:07:16[0m | [1mINFO    [0m | [36mcore.service_registry[0m | [1m  📦 Service registered: [memory] → MemoryManager[0m
+[32m2026-06-11 23:07:16[0m | [1mINFO    [0m | [36mactions.routing_engine[0m | [1m🔀 RoutingEngine initialized | handlers=['app_control', 'system_control', 'media_control', 'web_search', 'utility', 'question_answer', 'memory', 'unknown'] | threshold=0.55[0m
+[32m2026-06-11 23:07:16[0m | [1mINFO    [0m | [36mactions.action_router[0m | [1m⚡ ActionRouter initialized | modules=['smart_home', 'hospital', 'vehicle', 'mobile'][0m
+[32m2026-06-11 23:07:16[0m | [1mINFO    [0m | [36mcore.service_registry[0m | [1m  📦 Service registered: [action_router] → ActionRouter[0m
+[32m2026-06-11 23:07:16[0m | [1mINFO    [0m | [36mcore.assistant[0m | [1m🧠 GiniAssistant created | v1.0.0[0m
+[32m2026-06-11 23:07:16[0m | [1mINFO    [0m | [36mutils.event_logger[0m | [1m[LIFECYCLE] assistant.complete component=GiniAssistant[0m
+[32m2026-06-11 23:07:16[0m | [1mINFO    [0m | [36mcore.assistant[0m | [1m✅ GiniAssistant is ready | Emotion engine: True[0m
+[32m2026-06-11 23:07:16[0m | [1mINFO    [0m | [36mcore.assistant[0m | [1m📩 [mem_val_Name memory] → Remember my name is Anmol[0m
+[32m2026-06-11 23:07:16[0m | [1mINFO    [0m | [36mutils.event_logger[0m | [1m[INTENT] memory(1.00) sub=store rid=ab472dcb-0121-480e-a10a-473bb307db82[0m
+[32m2026-06-11 23:07:16[0m | [1mINFO    [0m | [36mactions.routing_engine[0m | [1m⚡ Route: 'remember my name is anmol' → memory(1.00)[0m
+[32m2026-06-11 23:07:16[0m | [1mINFO    [0m | [36mcore.assistant[0m | [1m💬 [mem_val_Name memory] ← Got it! I'll remember: 'Anmol'.[0m
+[32m2026-06-11 23:07:16[0m | [1mINFO    [0m | [36mcore.assistant[0m | [1m📩 [mem_val_Name memory] → What is my name?[0m
+[32m2026-06-11 23:07:16[0m | [1mINFO    [0m | [36mutils.event_logger[0m | [1m[INTENT] memory(1.00) sub=recall rid=0b64930c-acb7-4b20-8fd5-103d5b1da0da[0m
+[32m2026-06-11 23:07:16[0m | [1mINFO    [0m | [36mactions.routing_engine[0m | [1m⚡ Route: 'what is my name?' → memory(1.00)[0m
+[32m2026-06-11 23:07:16[0m | [1mINFO    [0m | [36mcore.assistant[0m | [1m💬 [mem_val_Name memory] ← Memory storage is not available right now.[0m
+  FAIL: Name memory
+         Store:  'Got it! I'll remember: 'Anmol'.'
+         Recall: 'Memory storage is not available right now.'
+         Expected 'Anmol' in recall
+[32m2026-06-11 23:07:16[0m | [1mINFO    [0m | [36mcore.assistant[0m | [1m📩 [mem_val_Project memory] → Remember I am building Gini AI[0m
+[32m2026-06-11 23:07:16[0m | [1mINFO    [0m | [36mutils.event_logger[0m | [1m[INTENT] memory(1.00) sub=store rid=d35c9f21-18b6-4078-b278-5b4b7d2495c1[0m
+[32m2026-06-11 23:07:16[0m | [1mINFO    [0m | [36mactions.routing_engine[0m | [1m⚡ Route: 'remember i am building gini ai' → memory(1.00)[0m
+[32m2026-06-11 23:07:16[0m | [1mINFO    [0m | [36mcore.assistant[0m | [1m💬 [mem_val_Project memory] ← Got it! I'll remember: 'Gini AI'.[0m
+[32m2026-06-11 23:07:16[0m | [1mINFO    [0m | [36mcore.assistant[0m | [1m📩 [mem_val_Project memory] → What project am I building?[0m
+[32m2026-06-11 23:07:16[0m | [1mINFO    [0m | [36mutils.event_logger[0m | [1m[INTENT] memory(1.00) sub=recall rid=86129b3a-fd66-4657-a358-317c0b86b27b[0m
+[32m2026-06-11 23:07:16[0m | [1mINFO    [0m | [36mactions.routing_engine[0m | [1m⚡ Route: 'what project am i building?' → memory(1.00)[0m
+[32m2026-06-11 23:07:16[0m | [1mINFO    [0m | [36mcore.assistant[0m | [1m💬 [mem_val_Project memory] ← Memory storage is not available right now.[0m
+  FAIL: Project memory
+         Store:  'Got it! I'll remember: 'Gini AI'.'
+         Recall: 'Memory storage is not available right now.'
+         Expected 'Gini' in recall
+[32m2026-06-11 23:07:16[0m | [1mINFO    [0m | [36mcore.assistant[0m | [1m📩 [mem_val_Preference memory] → Remember my favorite color is blue[0m
+[32m2026-06-11 23:07:16[0m | [1mINFO    [0m | [36mutils.event_logger[0m | [1m[INTENT] memory(1.00) sub=store rid=25c9044e-f3b9-4484-bae7-54b81e88a1e3[0m
+[32m2026-06-11 23:07:16[0m | [1mINFO    [0m | [36mactions.routing_engine[0m | [1m⚡ Route: 'remember my favorite color is blue' → memory(1.00)[0m
+[32m2026-06-11 23:07:16[0m | [1mINFO    [0m | [36mcore.assistant[0m | [1m💬 [mem_val_Preference memory] ← Got it! I'll remember: 'blue'.[0m
+[32m2026-06-11 23:07:16[0m | [1mINFO    [0m | [36mcore.assistant[0m | [1m📩 [mem_val_Preference memory] → What is my favorite color?[0m
+[32m2026-06-11 23:07:16[0m | [1mINFO    [0m | [36mutils.event_logger[0m | [1m[INTENT] memory(1.00) sub=recall rid=db922dfc-ed75-4a68-9752-bbed157e515b[0m
+[32m2026-06-11 23:07:16[0m | [1mINFO    [0m | [36mactions.routing_engine[0m | [1m⚡ Route: 'what is my favorite color?' → memory(1.00)[0m
+[32m2026-06-11 23:07:16[0m | [1mINFO    [0m | [36mcore.assistant[0m | [1m💬 [mem_val_Preference memory] ← Memory storage is not available right now.[0m
+  FAIL: Preference memory
+         Store:  'Got it! I'll remember: 'blue'.'
+         Recall: 'Memory storage is not available right now.'
+         Expected 'blue' in recall
+
+  0/3 memory V2 tests passed
+
+=======================================================
+  Syntax check    : OK
+  Imports         : OK
+  Cloud API refs  : CLEAN
+  Unit tests      : 16/16
+  Pipeline tests  : 6/6
+  Memory V2 tests : 0/3
+  Placeholder stub: GONE
+
+  RESULT: ⚠️  SOME ISSUES
+=======================================================

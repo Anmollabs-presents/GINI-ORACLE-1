@@ -35,6 +35,8 @@ from sqlalchemy import (
     UniqueConstraint,
     func,
     or_,
+    inspect,
+    text,
 )
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import declarative_base, relationship, sessionmaker
@@ -47,6 +49,22 @@ Base = declarative_base()
 
 # Max turns kept per session (sliding window)
 DEFAULT_WINDOW_SIZE = 20
+
+MEMORY_CATEGORIES = {
+    "personal": "Personal Memory",
+    "project": "Project Memory",
+    "preference": "Preferences",
+    "preferences": "Preferences",
+    "task": "Tasks",
+    "tasks": "Tasks",
+    "fact": "Facts",
+    "facts": "Facts",
+}
+
+
+def normalize_category(name: str) -> str:
+    value = (name or "").strip().lower()
+    return MEMORY_CATEGORIES.get(value, MEMORY_CATEGORIES["facts"])
 
 
 class DBSessionRecord(Base):
@@ -87,6 +105,7 @@ class MemoryFactRecord(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(String(128), nullable=False, index=True)
     topic = Column(String(128), nullable=False, index=True)
+    category = Column(String(64), nullable=False, default="Facts", server_default="Facts", index=True)
     value = Column(Text, nullable=False)
     added_at = Column(DateTime, default=_now, nullable=False)
 
@@ -163,6 +182,7 @@ class MemoryManager:
         self._engine = create_engine(self.database_url, **engine_kwargs)
         self._Session = sessionmaker(bind=self._engine, expire_on_commit=False)
         Base.metadata.create_all(self._engine)
+        self._ensure_memory_category_column()
         self._session_cache: Dict[str, Session] = {}
 
         log.info(
@@ -329,10 +349,46 @@ class MemoryManager:
             )
             return [row[0] for row in results]
 
-    def remember_fact(self, user_id: str, topic: str, value: str) -> str:
-        """Store or update a memory fact for a user."""
+    def _ensure_memory_category_column(self) -> None:
+        """Ensure the persistent memory table has a category column."""
+        inspector = inspect(self._engine)
+        if "memory_facts" not in inspector.get_table_names():
+            return
+        columns = [col["name"] for col in inspector.get_columns("memory_facts")]
+        if "category" not in columns:
+            with self._engine.connect() as conn:
+                conn.execute(
+                    text(
+                        "ALTER TABLE memory_facts ADD COLUMN category VARCHAR(64) NOT NULL DEFAULT 'Facts'"
+                    )
+                )
+                conn.commit()
+
+    def _infer_category(self, topic: str, value: str | None = None) -> str:
+        normalized_topic = (topic or "").strip().lower()
+        if normalized_topic in {"name", "first name", "last name", "me", "fullname", "full name"}:
+            return MEMORY_CATEGORIES["personal"]
+        if normalized_topic in {"project", "project name", "building", "working on", "app"}:
+            return MEMORY_CATEGORIES["project"]
+        if "color" in normalized_topic or "colour" in normalized_topic or normalized_topic in {"preference", "preferences", "like", "love", "hate"}:
+            return MEMORY_CATEGORIES["preference"]
+        if normalized_topic in {"task", "todo", "reminder", "reminders", "due", "deadline"}:
+            return MEMORY_CATEGORIES["tasks"]
+        if normalized_topic in {"note", "fact", "facts", "idea", "information"}:
+            return MEMORY_CATEGORIES["facts"]
+        if value:
+            value_lower = value.lower()
+            if "project" in value_lower or "gini" in value_lower or "building" in value_lower:
+                return MEMORY_CATEGORIES["project"]
+            if "color" in value_lower or "colour" in value_lower or "like" in value_lower:
+                return MEMORY_CATEGORIES["preference"]
+        return MEMORY_CATEGORIES["facts"]
+
+    def remember_fact(self, user_id: str, topic: str, value: str, category: Optional[str] = None) -> str:
+        """Store or update a persistent memory fact for a user."""
         if not topic or not value:
             return ""
+        category_name = normalize_category(category) if category else self._infer_category(topic, value)
         with self._session() as db:
             fact = (
                 db.query(MemoryFactRecord)
@@ -341,17 +397,25 @@ class MemoryManager:
             )
             if fact:
                 fact.value = value
+                fact.category = category_name
                 fact.added_at = _now()
             else:
-                fact = MemoryFactRecord(user_id=user_id, topic=topic, value=value)
+                fact = MemoryFactRecord(
+                    user_id=user_id,
+                    topic=topic,
+                    category=category_name,
+                    value=value,
+                )
                 db.add(fact)
             db.commit()
         return value
 
-    def recall_fact(self, user_id: str, topic: Optional[str] = None):
-        """Retrieve memory facts for a user."""
+    def recall_fact(self, user_id: str, topic: Optional[str] = None, category: Optional[str] = None):
+        """Retrieve memory facts for a user, optionally by topic or category."""
         with self._session() as db:
             query = db.query(MemoryFactRecord).filter_by(user_id=user_id)
+            if category:
+                query = query.filter(MemoryFactRecord.category == normalize_category(category))
             if topic:
                 like_expr = f"%{topic}%"
                 query = query.filter(
@@ -364,11 +428,13 @@ class MemoryManager:
 
         if not facts:
             return None
-        if topic:
-            if len(facts) == 1:
-                return facts[0].value
-            return {fact.topic: fact.value for fact in facts}
+        if topic and len(facts) == 1:
+            return facts[0].value
         return {fact.topic: fact.value for fact in facts}
+
+    def search_facts(self, user_id: str, query: str):
+        """Search memory facts by topic or value for a user."""
+        return self.recall_fact(user_id, topic=query)
 
     def forget_fact(self, user_id: str, topic: Optional[str]) -> int:
         """Remove memory facts matching the topic for a user."""
@@ -389,6 +455,133 @@ class MemoryManager:
             )
             db.commit()
         return deleted
+
+    def get_active_topic(self, session_id: str) -> Optional[str]:
+        """
+        Scan the last few turns of the session history to identify the active topic.
+        Looks for the most recent noun/subject discussed.
+        """
+        history = self.get_history(session_id)
+        if not history:
+            return None
+        
+        # Look at turns starting from the most recent
+        for turn in reversed(history):
+            content = turn.get("content", "").lower()
+            words = [w.strip("?,.!:;()\"'") for w in content.split()]
+            stop_words = {
+                "the", "a", "an", "and", "or", "but", "if", "then", "else", "when",
+                "at", "from", "by", "for", "with", "about", "against", "between",
+                "into", "through", "during", "before", "after", "above", "below",
+                "to", "in", "on", "of", "off", "over", "under", "again", "further",
+                "once", "here", "there", "where", "why", "how", "all", "any", "both",
+                "each", "few", "more", "most", "other", "some", "such", "no", "nor",
+                "not", "only", "own", "same", "so", "than", "too", "very", "can",
+                "will", "just", "should", "now", "my", "your", "his", "her", "its",
+                "their", "our", "me", "you", "him", "them", "us", "i", "we", "he",
+                "she", "it", "they", "what", "which", "who", "whom", "this", "that",
+                "these", "those", "am", "is", "are", "was", "were", "be", "been",
+                "being", "have", "has", "had", "having", "do", "does", "did", "doing",
+                "would", "could", "should", "explain", "describe", "define", "tell",
+                "what's", "whats", "who's", "whos", "please", "know", "remember"
+            }
+            # Find first word that is not a stop word and has length > 2
+            for word in words:
+                if len(word) > 2 and word not in stop_words:
+                    return word
+        return None
+
+    def get_relevant_memories(self, user_id: str, query: str, active_topic: Optional[str] = None, limit: int = 5) -> Dict[str, str]:
+        """
+        Retrieve persistent memories for a user and score them against the query and active topic
+        using keyword overlap. Returns a dictionary of relevant memories grouped by category.
+        """
+        with self._session() as db:
+            facts = db.query(MemoryFactRecord).filter_by(user_id=user_id).all()
+        
+        if not facts:
+            return {}
+
+        stop_words = {
+            "the", "a", "an", "and", "or", "but", "if", "then", "else", "when",
+            "at", "from", "by", "for", "with", "about", "against", "between",
+            "into", "through", "during", "before", "after", "above", "below",
+            "to", "in", "on", "of", "off", "over", "under", "again", "further",
+            "once", "here", "there", "where", "why", "how", "all", "any", "both",
+            "each", "few", "more", "most", "other", "some", "such", "no", "nor",
+            "not", "only", "own", "same", "so", "than", "too", "very", "can",
+            "will", "just", "should", "now", "my", "your", "his", "her", "its",
+            "their", "our", "me", "you", "him", "them", "us", "i", "we", "he",
+            "she", "it", "they", "what", "which", "who", "whom", "this", "that",
+            "these", "those", "am", "is", "are", "was", "were", "be", "been",
+            "being", "have", "has", "had", "having", "do", "does", "did", "doing",
+            "would", "could", "should", "explain", "describe", "define", "tell",
+            "what's", "whats", "who's", "whos", "please", "know", "remember"
+        }
+        
+        def tokenize(text_str: str) -> set:
+            words = text_str.lower().split()
+            cleaned = set()
+            for w in words:
+                w_clean = w.strip("?,.!:;()\"'")
+                if len(w_clean) > 2 and w_clean not in stop_words:
+                    cleaned.add(w_clean)
+            return cleaned
+
+        query_keywords = tokenize(query)
+        topic_keywords = tokenize(active_topic) if active_topic else set()
+        all_search_keywords = query_keywords.union(topic_keywords)
+
+        scored_facts = []
+        for fact in facts:
+            fact_topic_words = tokenize(fact.topic)
+            fact_value_words = tokenize(fact.value)
+            
+            score = 0
+            for kw in all_search_keywords:
+                if kw in fact_topic_words:
+                    score += 3
+                if kw in fact_value_words:
+                    score += 1
+
+            query_lower = query.lower()
+            if "name" in query_lower or "who" in query_lower:
+                if fact.topic.lower() in ("name", "profile"):
+                    score += 2
+            if "project" in query_lower or "building" in query_lower or "working" in query_lower:
+                if fact.topic.lower() == "project":
+                    score += 2
+            if "color" in query_lower or "colour" in query_lower or "favorite" in query_lower:
+                if "color" in fact.topic.lower() or "colour" in fact.topic.lower():
+                    score += 2
+
+            scored_facts.append((score, fact))
+
+        # Sort by score descending
+        scored_facts.sort(key=lambda x: x[0], reverse=True)
+        
+        category_map = {
+            "Personal Memory": "personal",
+            "Project Memory": "project",
+            "Preferences": "preferences",
+            "Tasks": "tasks",
+            "Facts": "facts"
+        }
+
+        grouped = {}
+        count = 0
+        for score, fact in scored_facts:
+            if score <= 0:
+                continue
+            cat_key = category_map.get(fact.category, "facts")
+            if cat_key not in grouped:
+                grouped[cat_key] = []
+            grouped[cat_key].append(f"{fact.topic}: {fact.value}")
+            count += 1
+            if count >= limit:
+                break
+                
+        return {cat: "\n".join(lines) for cat, lines in grouped.items()}
 
     @property
     def total_sessions(self) -> int:

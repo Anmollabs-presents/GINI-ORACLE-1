@@ -3,94 +3,407 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GINI-AI Assistant</title>
+    <title>GINI AI — Emotion-Aware Cognitive Ecosystem</title>
+    <meta name="description" content="GINI AI: An ecosystem with active SQLite memory indexing, voice loop capabilities, and automated OS actions.">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <!-- Header -->
-        <header class="header">
-            <h1>🌟 GINI-AI Assistant</h1>
-            <div class="status-indicator">
-                <span id="status-dot" class="status-dot idle"></span>
-                <span id="status-text" class="status-text">Idle</span>
+    <div class="app-layout">
+        
+        <!-- ── Desktop Collapsible Sidebar ──────────────────────── -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">
+                <span class="brand-logo">✨</span>
+                <span class="brand-text">GINI Ecosystem</span>
             </div>
-        </header>
-
-        <!-- System Status -->
-        <section class="system-status">
-            <div class="status-item">
-                <label>Assistant:</label>
-                <span id="assistant-status">Loading...</span>
-            </div>
-            <div class="status-item">
-                <label>Session:</label>
-                <span id="session-id">—</span>
-            </div>
-            <div class="status-item">
-                <label>User:</label>
-                <span id="user-id">default</span>
-            </div>
-        </section>
-
-        <!-- Chat Display -->
-        <section class="chat-display">
-            <div id="chat-messages" class="chat-messages">
-                <div class="message system">
-                    <p>Welcome to GINI-AI! Send a message to get started.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Input Area -->
-        <section class="input-area">
-            <div class="input-container">
-                <input
-                    type="text"
-                    id="message-input"
-                    class="message-input"
-                    placeholder="Type your command or question..."
-                    disabled
-                >
-                <button id="micBtn" onclick="startVoice()" title="Voice Input">🎤</button>
-                
-                <button
-                    id="send-button"
-                    class="send-button"
-                    disabled
-                >
-                    Send
+            <nav class="sidebar-nav">
+                <button class="sidebar-item active" data-tab="home" title="Home Portal">
+                    <span class="sidebar-icon">🏠</span>
+                    <span class="sidebar-text">Home Portal</span>
+                </button>
+                <button class="sidebar-item" data-tab="chat" title="Chat Workspace">
+                    <span class="sidebar-icon">💬</span>
+                    <span class="sidebar-text">Chat Workspace</span>
+                </button>
+                <button class="sidebar-item" data-tab="memory" title="Memory Vault">
+                    <span class="sidebar-icon">🧠</span>
+                    <span class="sidebar-text">Memory Vault</span>
+                </button>
+                <button class="sidebar-item" data-tab="actions" title="Action Console">
+                    <span class="sidebar-icon">⚡</span>
+                    <span class="sidebar-text">Action Console</span>
+                </button>
+                <button class="sidebar-item" data-tab="speech" title="Speech Labs">
+                    <span class="sidebar-icon">🎛️</span>
+                    <span class="sidebar-text">Speech Labs</span>
+                </button>
+                <button class="sidebar-item" data-tab="settings" title="Ecosystem Settings">
+                    <span class="sidebar-icon">⚙️</span>
+                    <span class="sidebar-text">Settings</span>
+                </button>
+            </nav>
+            <div class="sidebar-footer">
+                <button class="sidebar-item" id="clearChatBtn" title="Clear Chat messages">
+                    <span class="sidebar-icon">🗑️</span>
+                    <span class="sidebar-text">Clear Chat</span>
                 </button>
             </div>
-            <div class="input-hint" id="input-hint"></div>
-        </section>
+        </aside>
 
-        <!-- State Indicator -->
-        <section class="state-info">
-            <div class="state-details">
-                <p><strong>Current State:</strong> <span id="current-state">idle</span></p>
-                <p><strong>Last Response Emotion:</strong> <span id="last-emotion">—</span></p>
-                <p id="error-display" class="error-display" style="display: none;"></p>
-            </div>
-        </section>
+        <!-- ── Main Screen Container ──────────────────────────── -->
+        <div class="main-container">
+            
+            <!-- ── Header ────────────────────────────────────── -->
+            <header class="header">
+                <div class="header-left">
+                    <span class="brand-logo mobile-logo">✨</span>
+                    <h2>GINI Ecosystem</h2>
+                </div>
+                <div class="header-right">
+                    <div id="voiceStatus" class="voice-status-label" aria-live="polite"></div>
+                    <div class="status-indicator">
+                        <span id="status-dot" class="status-dot idle"></span>
+                        <span id="status-text" class="status-text">Idle</span>
+                    </div>
+                </div>
+            </header>
 
-        <!-- Quick Actions -->
-        <section class="quick-actions">
-            <button class="action-btn" data-command="what is photosynthesis">What is photosynthesis?</button>
-            <button class="action-btn" data-command="play music">Play music</button>
-            <button class="action-btn" data-command="set a 10 minute timer">Set timer</button>
-            <button class="action-btn" data-command="search for today's news">Search news</button>
-        </section>
+            <!-- ── System Status Bar ─────────────────────────── -->
+            <section class="system-status" aria-label="System status">
+                <div class="status-item">
+                    <label>Assistant:</label>
+                    <span id="assistant-status">Offline</span>
+                </div>
+                <div class="status-item">
+                    <label>Session:</label>
+                    <span id="session-id">—</span>
+                </div>
+                <div class="status-item">
+                    <label>User:</label>
+                    <span id="user-id">default</span>
+                </div>
+            </section>
 
-        <!-- Footer -->
-        <footer class="footer">
-            <p>GINI-ORACLE-1 • v1.0.0 • <a href="/status" target="_blank">System Status</a></p>
-        </footer>
-    </div>
+            <!-- ── Workspace Tab Panels ───────────────────────── -->
+            <div class="workspace-panels">
+                
+                <!-- 1. PORTAL HOME PANEL (Halo Lab Inspired) -->
+                <section class="tab-panel active" id="panel-home">
+                    
+                    <!-- Hero card container -->
+                    <div class="hero-card" id="heroCard">
+                        <div class="hero-content">
+                            <span class="badge">Cognitive Platform</span>
+                            <h1>Your next big idea starts <span class="highlight">here</span></h1>
+                            <p class="hero-subtitle">The ideal framework to orchestrate assistant memory, coordinate local device actions, and run a continuous voice loop.</p>
+                            <div class="hero-actions">
+                                <button class="primary-btn" id="heroOpenChatBtn">Open GINI AI</button>
+                                <button class="secondary-btn" id="heroExploreMemoryBtn">Explore Vault</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Reactive Gini Core Visual Container -->
+                        <div class="hero-visual">
+                            <div class="gini-core-container" id="giniCoreContainer">
+                                <div class="gini-core" id="giniCore">
+                                    <div class="blob blob-1"></div>
+                                    <div class="blob blob-2"></div>
+                                    <div class="blob blob-3"></div>
+                                </div>
+                                <div class="ripple-ring ring-1"></div>
+                                <div class="ripple-ring ring-2"></div>
+                            </div>
+                        </div>
+                    </div>
 
+                    <!-- Bottom card-style information box -->
+                    <div class="info-card minimal-card">
+                        <div class="minimal-card-content">
+                            <h3 class="minimal-title">gini</h3>
+                            <p class="minimal-subtitle">open gini ai</p>
+                        </div>
+                        <button class="card-action-btn launch-btn-minimal" id="cardLaunchBtn">Launch Assistant</button>
+                    </div>
+                </section>
+
+                <!-- 2. CHAT WORKSPACE PANEL -->
+                <section class="tab-panel" id="panel-chat">
+                    <div class="chat-display-wrapper">
+                        <div class="chat-display" aria-label="Chat messages">
+                            <div id="chat-messages" class="chat-messages" role="log" aria-live="polite">
+                                <div class="message system">
+                                    <p>👋 Hi! I'm Gini. Type or tap 🎤 to speak with me.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mini Core in Chat Header Panel (Visible when chat has messages and core transitions) -->
+                        <div class="chat-core-indicator" id="chatCoreIndicator">
+                            <!-- Core gets mirrored here conditionally or header shrinks -->
+                        </div>
+                    </div>
+
+                    <div class="input-area" aria-label="Message input">
+                        <div class="input-container">
+                            <input
+                                type="text"
+                                id="message-input"
+                                class="message-input"
+                                placeholder="Type a message or tap the mic to speak…"
+                                autocomplete="off"
+                                disabled
+                            >
+                            <button
+                                id="micBtn"
+                                class="mic-btn voice-idle"
+                                title="Start voice input"
+                                aria-label="Voice input"
+                            >🎤</button>
+                            <button
+                                id="voiceLoopToggle"
+                                class="loop-btn"
+                                title="Voice loop OFF"
+                                aria-label="Toggle continuous voice mode"
+                            >🔁</button>
+                            <button
+                                id="send-button"
+                                class="send-button"
+                                disabled
+                                aria-label="Send message"
+                            >Send</button>
+                        </div>
+                        <div class="input-hint" id="input-hint"></div>
+                    </div>
+
+                    <section class="quick-actions" aria-label="Quick commands">
+                        <button class="action-btn" data-command="What is photosynthesis?">🌿 Photosynthesis</button>
+                        <button class="action-btn" data-command="play music">🎵 Play music</button>
+                        <button class="action-btn" data-command="set a 10 minute timer">⏱️ Timer</button>
+                        <button class="action-btn" data-command="search for today's news">📰 News</button>
+                        <button class="action-btn" data-command="tell me a joke">😄 Joke</button>
+                    </section>
+                </section>
+
+                <!-- 3. SQLITE MEMORY VAULT PANEL -->
+                <section class="tab-panel" id="panel-memory">
+                    <div class="panel-header">
+                        <div class="panel-header-text">
+                            <h2>🧠 SQLite Memory Vault</h2>
+                            <p>Observe persistent user facts, preference indices, and active tasks stored inside Gini's relational layer.</p>
+                        </div>
+                        <button class="refresh-btn" id="refreshMemoryBtn">🔄 Refresh Vault</button>
+                    </div>
+                    <div class="memory-grid" id="memoryGrid">
+                        <div class="empty-state">Loading SQLite memory entries...</div>
+                    </div>
+                </section>
+
+                <!-- 4. ACTION ENGINE CONSOLE -->
+                <section class="tab-panel" id="panel-actions">
+                    <div class="panel-header">
+                        <div class="panel-header-text">
+                            <h2>⚡ Action Engine Console</h2>
+                            <p>Monitor real-time OS integrations and browser executions dispatched by the Hybrid Intent Dispatch layer.</p>
+                        </div>
+                    </div>
+                    <div class="action-console-layout">
+                        <div class="console-card specs">
+                            <h3>Capabilities Registered</h3>
+                            <ul class="capability-list">
+                                <li>
+                                    <span class="cap-name">app_control</span>
+                                    <span class="cap-desc">Launches programs locally (Chrome, Spotify, Visual Studio, etc.)</span>
+                                </li>
+                                <li>
+                                    <span class="cap-name">system_control</span>
+                                    <span class="cap-desc">Executes native window and volume commands</span>
+                                </li>
+                                <li>
+                                    <span class="cap-name">media_control</span>
+                                    <span class="cap-desc">Plays/pauses active windows and monitors audio sessions</span>
+                                </li>
+                                <li>
+                                    <span class="cap-name">web_search</span>
+                                    <span class="cap-desc">Fires headless/headed search and scrapes answers</span>
+                                </li>
+                                <li>
+                                    <span class="cap-name">utility</span>
+                                    <span class="cap-desc">Handles local calculations, calendar events, and timers</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="console-card log">
+                            <h3>Execution Live Feed</h3>
+                            <div class="console-log" id="consoleLog">
+                                <span class="log-entry system">[SYSTEM] Gini Action Dispatch Engine online.</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 5. SPEECH LABS CONFIGURATION -->
+                <section class="tab-panel" id="panel-speech">
+                    <div class="panel-header">
+                        <div class="panel-header-text">
+                            <h2>🎛️ Speech Labs</h2>
+                            <p>Modify browser voice parameters and customize TTS profiles.</p>
+                        </div>
+                    </div>
+                    <div class="speech-labs-layout">
+                        <div class="settings-card">
+                            <h3>Voice Parameters</h3>
+                            <div class="settings-group">
+                                <label for="ttsVoiceSelect">Synthesizer Voice Profile:</label>
+                                <select id="ttsVoiceSelect" class="settings-select">
+                                    <option value="default">Default Assistant Female</option>
+                                </select>
+                            </div>
+                            <div class="settings-group">
+                                <div class="slider-header">
+                                    <label for="ttsRateRange">Playback Rate (Speed):</label>
+                                    <span id="rateVal">0.92</span>
+                                </div>
+                                <input type="range" id="ttsRateRange" min="0.5" max="1.5" step="0.05" value="0.92">
+                            </div>
+                            <div class="settings-group">
+                                <div class="slider-header">
+                                    <label for="ttsPitchRange">Frequency (Pitch):</label>
+                                    <span id="pitchVal">1.10</span>
+                                </div>
+                                <input type="range" id="ttsPitchRange" min="0.7" max="1.6" step="0.05" value="1.10">
+                            </div>
+                        </div>
+                        
+                        <div class="settings-card">
+                            <h3>Voice Session Loop</h3>
+                            <p class="setting-desc">When continuous conversation mode is enabled, Gini will automatically return to active listening after finishing text-to-speech output. This creates a hands-free voice control loop.</p>
+                            <div class="toggle-switch-container">
+                                <span class="toggle-label">Voice Loop Mode</span>
+                                <button id="labsVoiceLoopToggle" class="labs-toggle-btn">Disabled</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 6. ECOSYSTEM SETTINGS PANEL -->
+                <section class="tab-panel" id="panel-settings">
+                    <div class="panel-header">
+                        <div class="panel-header-text">
+                            <h2>⚙️ Ecosystem Settings</h2>
+                            <p>Configure telemetry, local action endpoints, and system behaviors.</p>
+                        </div>
+                    </div>
+                    <div class="settings-grid">
+                        <div class="settings-card">
+                            <h3>General Preferences</h3>
+                            <div class="toggle-switch-container">
+                                <span class="toggle-label">Dark Mode (Default)</span>
+                                <label class="switch">
+                                    <input type="checkbox" checked disabled>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            <div class="toggle-switch-container">
+                                <span class="toggle-label">Notification Sounds</span>
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="settings-card">
+                            <h3>Data & Privacy</h3>
+                            <div class="toggle-switch-container">
+                                <span class="toggle-label">Local Memory Sync</span>
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            <div class="toggle-switch-container">
+                                <span class="toggle-label">Telemetry & Analytics</span>
+                                <label class="switch">
+                                    <input type="checkbox">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="settings-card">
+                            <h3>Advanced Engine</h3>
+                            <div class="toggle-switch-container">
+                                <span class="toggle-label">Background Execution Mode</span>
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            <div class="toggle-switch-container">
+                                <span class="toggle-label">Developer Console Logging</span>
+                                <label class="switch">
+                                    <input type="checkbox">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+            </div><!-- /workspace-panels -->
+
+            <!-- ── State / Emotion Footer ─────────────────────── -->
+            <section class="state-info" aria-label="Assistant state">
+                <div class="state-details">
+                    <p>
+                        <strong>System State:</strong> <span id="current-state">idle</span>
+                        &nbsp;&nbsp;•&nbsp;&nbsp;
+                        <strong>Emotion:</strong> <span id="last-emotion">—</span>
+                    </p>
+                    <p id="error-display" class="error-display" style="display:none;" role="alert"></p>
+                </div>
+            </section>
+
+            <!-- ── Footer ────────────────────────────────────── -->
+            <footer class="footer">
+                <p>GINI AI Ecosystem • v2.0.0 • <a href="/status" target="_blank" rel="noopener">System Status</a></p>
+            </footer>
+            
+        </div><!-- /main-container -->
+
+        <!-- ── Mobile Bottom Navigation Bar ──────────────────────── -->
+        <nav class="bottom-nav" id="bottomNav">
+            <button class="nav-item active" data-tab="home">
+                <span class="nav-icon">🏠</span>
+                <span>Home</span>
+            </button>
+            <button class="nav-item" data-tab="chat">
+                <span class="nav-icon">💬</span>
+                <span>Chat</span>
+            </button>
+            <button class="nav-item" data-tab="memory">
+                <span class="nav-icon">🧠</span>
+                <span>Memory</span>
+            </button>
+            <button class="nav-item" data-tab="actions">
+                <span class="nav-icon">⚡</span>
+                <span>Actions</span>
+            </button>
+            <button class="nav-item" data-tab="speech">
+                <span class="nav-icon">🎛️</span>
+                <span>Speech</span>
+            </button>
+            <button class="nav-item" data-tab="settings">
+                <span class="nav-icon">⚙️</span>
+                <span>Settings</span>
+            </button>
+        </nav>
+
+    </div><!-- /app-layout -->
+
+    <!-- Scripts — voice.js and app.js manage browser voice/APIs -->
     <script src="api.js"></script>
     <script src="state.js"></script>
     <script src="ui.js"></script>
+    <script src="voice.js"></script>
     <script src="app.js"></script>
 </body>
 </html>

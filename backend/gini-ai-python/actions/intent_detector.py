@@ -142,11 +142,14 @@ _QA_KEYWORDS = {
 }
 
 _MEMORY_KEYWORDS = {
-    "remember":  0.9, "recall":   0.9, "forget":   0.8,
-    "memorize":  0.9, "store":    0.6, "save":     0.5,
-    "my name":   0.7, "i am":     0.4, "i like":   0.5,
-    "i prefer":  0.6, "i hate":   0.5, "note that":0.8,
-    "keep in mind":0.9, "don't forget":0.9,
+    "remember":      0.9, "recall":      0.9, "forget":      0.8,
+    "memorize":      0.9, "store":       0.6, "save":        0.5,
+    "my name":       0.7, "i am":        0.4, "i like":      0.5,
+    "i prefer":      0.6, "i hate":      0.5, "note that":   0.8,
+    "keep in mind":  0.9, "don't forget":0.9,
+    # Recall-query anchors: ensure "what is my X" queries outscore QA
+    "my":            0.3, "what is my":  0.6, "what project": 0.5,
+    "who am i":      0.8, "what am i":  0.6,
 }
 
 
@@ -295,15 +298,47 @@ class IntentDetector:
         matched, score = self._keyword_score(cmd, _MEMORY_KEYWORDS)
         sub = None
 
-        if cmd.has_any("what is my", "whats my", "what's my", "who am i", "who do i", "my name"):
+        # ── Recall detection ─────────────────────────────────────────
+        # IMPORTANT: cmd.has_any() matches single tokens only.
+        # For multi-word phrases use cmd.contains() (substring on normalized).
+        _recall_contains = (
+            "what is my",
+            "what's my",
+            "whats my",
+            "who am i",
+            "who do i",
+            "what am i building",
+            "what am i working",
+            "what project am i",
+            "do you remember",
+            "do you know my",
+        )
+        is_recall = (
+            any(cmd.contains(phrase) for phrase in _recall_contains)
+            or (cmd.contains("my name") and cmd.is_question)
+        )
+
+        if is_recall:
             sub = "recall"
-            score = min(1.0, score + 0.4)
-        elif cmd.has_any("remember", "memorize", "note", "save", "store"):
+            # Boost large enough that even a zero-base-score recall query
+            # (e.g. "what is my favorite color") wins over QA's 0.75.
+            score = min(1.0, score + 0.65)
+
+        # ── Store detection ───────────────────────────────────────────
+        elif cmd.has_any("remember", "memorize") or cmd.contains("note that") or cmd.contains("keep in mind") or cmd.contains("don't forget"):
             sub = "store"
-        elif cmd.has_any("recall", "what did", "do you know", "do you remember"):
+            if not cmd.is_question:
+                score = min(1.0, score + 0.1)
+
+        # ── Recall (secondary keywords) ───────────────────────────────
+        elif cmd.has_any("recall") or cmd.contains("do you know"):
             sub = "recall"
+            score = min(1.0, score + 0.2)
+
+        # ── Forget ────────────────────────────────────────────────────
         elif cmd.has_any("forget"):
             sub = "forget"
+            score = min(1.0, score + 0.1)
 
         return IntentResult(INTENT_MEMORY, score, matched, sub_intent=sub)
 

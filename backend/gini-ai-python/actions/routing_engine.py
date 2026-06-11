@@ -139,7 +139,7 @@ class RoutingEngine:
                 request_id=request_id,
                 user_id=user_id,
             ):
-                result = await self._pipeline(raw_input, request_id=request_id)
+                result = await self._pipeline(raw_input, request_id=request_id, user_id=user_id, session_id=session_id)
             result.request_id = request_id  # propagate for callers
             return result
         except Exception as e:
@@ -162,12 +162,12 @@ class RoutingEngine:
                 input_normalized="",
             )
 
-    async def _pipeline(self, raw_input: str, *, request_id: Optional[str] = None) -> RouteResult:
+    async def _pipeline(self, raw_input: str, *, request_id: Optional[str] = None, user_id: str = "default", session_id: Optional[str] = None) -> RouteResult:
         """The actual parse → detect → dispatch pipeline."""
 
         # ── Step 1: Parse ─────────────────────────────────────
         with elog.timed("parse", request_id=request_id):
-            cmd: ParsedCommand = self._parser.parse(raw_input)
+            cmd: ParsedCommand = self._parser.parse(raw_input, user_id=user_id, session_id=session_id)
 
         if not cmd.tokens:
             elog.warning(

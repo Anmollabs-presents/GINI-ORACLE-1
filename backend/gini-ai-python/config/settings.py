@@ -39,6 +39,14 @@ try:
         local_llm_url: str = Field(default="http://localhost:11434")
         local_llm_model: str = Field(default="qwen2.5")
 
+        # ── AI Provider Settings ──────────────────────────────
+        api_key: str = Field(default="")
+        model_name: str = Field(default="gemini-1.5-flash")
+        temperature: float = Field(default=0.7)
+        max_tokens: int = Field(default=1024)
+        timeout: float = Field(default=15.0)
+        ai_provider: str = Field(default="gemini")
+
         # ── Voice ─────────────────────────────────────────────
         voice_enabled: bool = Field(default=True)
         voice_language: str = Field(default="en-IN")
@@ -84,6 +92,13 @@ except ImportError:
         local_llm_backend: str = "ollama"
         local_llm_url: str = "http://localhost:11434"
         local_llm_model: str = "qwen2.5"
+        # AI Provider Settings
+        api_key: str = ""
+        model_name: str = "gemini-1.5-flash"
+        temperature: float = 0.7
+        max_tokens: int = 1024
+        timeout: float = 15.0
+        ai_provider: str = "gemini"
         voice_enabled: bool = True
         voice_language: str = "en-IN"
         emotion_engine_enabled: bool = True
@@ -101,6 +116,18 @@ except ImportError:
 
         @classmethod
         def from_env(cls):
+            try:
+                temp = float(_env("TEMPERATURE", "0.7"))
+            except ValueError:
+                temp = 0.7
+            try:
+                tokens = int(_env("MAX_TOKENS", "1024"))
+            except ValueError:
+                tokens = 1024
+            try:
+                tout = float(_env("TIMEOUT", "15.0"))
+            except ValueError:
+                tout = 15.0
             return cls(
                 app_name=_env("APP_NAME", "GINI-AI"),
                 app_env=_env("APP_ENV", "development"),
@@ -111,6 +138,12 @@ except ImportError:
                 local_llm_model=_env("LOCAL_LLM_MODEL", "qwen2.5"),
                 log_level=_env("LOG_LEVEL", "INFO"),
                 log_to_file=_env_bool("LOG_TO_FILE", False),
+                api_key=_env("API_KEY", ""),
+                model_name=_env("MODEL_NAME", "gemini-1.5-flash"),
+                temperature=temp,
+                max_tokens=tokens,
+                timeout=tout,
+                ai_provider=_env("AI_PROVIDER", "gemini"),
             )
 
     @lru_cache()

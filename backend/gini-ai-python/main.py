@@ -151,6 +151,27 @@ async def execute_action(intent: str, payload: dict = {}):
     return result
 
 
+@app.get("/memory", tags=["Memory"])
+async def get_memories(user_id: str = "default"):
+    """Get all memories stored in SQLite for the user."""
+    from core.memory import MemoryFactRecord
+    assistant: GiniAssistant = app.state.assistant
+    memory_manager = assistant._registry.resolve_optional("memory")
+    if not memory_manager:
+        return []
+    with memory_manager._session() as db:
+        facts = db.query(MemoryFactRecord).filter_by(user_id=user_id).order_by(MemoryFactRecord.added_at.desc()).all()
+        return [
+            {
+                "topic": f.topic,
+                "value": f.value,
+                "category": f.category,
+                "added_at": f.added_at.isoformat() if f.added_at else None
+            }
+            for f in facts
+        ]
+
+
 @app.get("/plugins", tags=["Plugins"])
 async def list_plugins():
     """List all registered plugins."""
