@@ -5,7 +5,7 @@
 
 class GiniAssistantApp {
     constructor() {
-        this.api = new GiniAPIClient('http://localhost:8000');
+        this.api = new GiniAPIClient('https://gini-ag1b.onrender.com');
         this.stateManager = new AssistantStateManager();
         this.ui = new AssistantUIManager();
 
@@ -147,3 +147,11 @@ document.addEventListener('DOMContentLoaded', () => {
     window.app = new GiniAssistantApp();
     console.log('✅ GINI-AI Assistant UI ready');
 });
+function startVoice() {
+  const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+  recognition.lang = 'en-IN';
+  recognition.onresult = (e) => {
+    document.getElementById('message-input').value = e.results[0][0].transcript;
+  };
+  recognition.start();
+}
