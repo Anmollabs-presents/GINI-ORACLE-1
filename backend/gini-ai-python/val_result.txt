@@ -1,0 +1,187 @@
+=== SYNTAX CHECK ===
+  OK  assistant_core/__init__.py
+  OK  assistant_core/response_engine.py
+  OK  assistant_core/knowledge_engine.py
+  OK  assistant_core/local_llm_adapter.py
+  OK  assistant_core/intent_dispatch.py
+  OK  core/assistant.py
+  OK  config/settings.py
+  OK  utils/health.py
+
+=== IMPORT CHECK ===
+  OK  All assistant_core modules import cleanly
+
+=== NO CLOUD API CHECK ===
+  OK  No cloud API imports or active key references found
+
+=== FUNCTIONAL TESTS ===
+  PASS: Greeting
+  FAIL: Greeting hi | input='hi' | expected 'what' in 'Hello! I'm Gini, your local AI assistant. Ask me anything.'
+  FAIL: How are you | input='how are you' | expected 'well' in 'I'm running great, thanks for asking! What can I help with?'
+  PASS: Identity
+  FAIL: Thanks | input='thank you' | expected 'welcome' in 'Happy to help! Let me know if you need anything else.'
+  PASS: Math add
+  PASS: Math multiply
+  PASS: Time query
+  PASS: Date query
+  PASS: Photosynthesis
+  PASS: Python lang
+  PASS: Gravity
+  PASS: Albert Einstein
+  PASS: DNA
+  PASS: Machine learning
+  PASS: Algorithm
+
+  13/16 functional tests passed
+
+=== PLACEHOLDER CHECK ===
+  OK  No placeholder stub text in core/assistant.py
+
+=== ASYNC PIPELINE TEST ===
+[32m2026-06-10 20:27:51[0m | [1mINFO    [0m | [36mutils.event_logger[0m | [1m[LIFECYCLE] assistant.complete component=GiniAssistant[0m
+--- Logging error in Loguru Handler #1 ---
+Record was: {'elapsed': datetime.timedelta(seconds=1, microseconds=803133), 'exception': None, 'extra': {'module': 'actions.process_manager'}, 'file': (name='process_manager.py', path='C:\\anmol\\HELL MARRY\\GINI-ORACLE-1-resilience\\GINI-ORACLE-1\\backend\\gini-ai-python\\actions\\process_manager.py'), 'function': '__init__', 'level': (name='INFO', no=20, icon='\u2139\ufe0f'), 'line': 107, 'message': '\u2699\ufe0f ProcessManager initialized', 'module': 'process_manager', 'name': 'actions.process_manager', 'process': (id=2052, name='MainProcess'), 'thread': (id=14328, name='MainThread'), 'time': datetime(2026, 6, 10, 20, 27, 51, 336739, tzinfo=datetime.timezone(datetime.timedelta(seconds=19800), 'India Standard Time'))}
+Traceback (most recent call last):
+  File "C:\anmol\HELL MARRY\GINI-ORACLE-1-resilience\.venv\Lib\site-packages\loguru\_handler.py", line 206, in emit
+    self._sink.write(str_record)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "C:\anmol\HELL MARRY\GINI-ORACLE-1-resilience\.venv\Lib\site-packages\loguru\_simple_sinks.py", line 16, in write
+    self._stream.write(message)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Dell\AppData\Local\Programs\Python\Python314\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode characters in position 89-90: character maps to <undefined>
+--- End of logging error ---
+--- Logging error in Loguru Handler #1 ---
+Record was: {'elapsed': datetime.timedelta(seconds=2, microseconds=166620), 'exception': None, 'extra': {'module': 'actions.web_executor'}, 'file': (name='web_executor.py', path='C:\\anmol\\HELL MARRY\\GINI-ORACLE-1-resilience\\GINI-ORACLE-1\\backend\\gini-ai-python\\actions\\web_executor.py'), 'function': '__init__', 'level': (name='INFO', no=20, icon='\u2139\ufe0f'), 'line': 178, 'message': '\U0001f310 WebExecutor initialized', 'module': 'web_executor', 'name': 'actions.web_executor', 'process': (id=2052, name='MainProcess'), 'thread': (id=14328, name='MainThread'), 'time': datetime(2026, 6, 10, 20, 27, 51, 700226, tzinfo=datetime.timezone(datetime.timedelta(seconds=19800), 'India Standard Time'))}
+Traceback (most recent call last):
+  File "C:\anmol\HELL MARRY\GINI-ORACLE-1-resilience\.venv\Lib\site-packages\loguru\_handler.py", line 206, in emit
+    self._sink.write(str_record)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "C:\anmol\HELL MARRY\GINI-ORACLE-1-resilience\.venv\Lib\site-packages\loguru\_simple_sinks.py", line 16, in write
+    self._stream.write(message)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Dell\AppData\Local\Programs\Python\Python314\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f310' in position 86: character maps to <undefined>
+--- End of logging error ---
+--- Logging error in Loguru Handler #1 ---
+Record was: {'elapsed': datetime.timedelta(seconds=2, microseconds=172442), 'exception': None, 'extra': {'module': 'actions.routing_engine'}, 'file': (name='routing_engine.py', path='C:\\anmol\\HELL MARRY\\GINI-ORACLE-1-resilience\\GINI-ORACLE-1\\backend\\gini-ai-python\\actions\\routing_engine.py'), 'function': '__init__', 'level': (name='INFO', no=20, icon='\u2139\ufe0f'), 'line': 105, 'message': "\U0001f500 RoutingEngine initialized | handlers=['app_control', 'system_control', 'media_control', 'web_search', 'utility', 'question_answer', 'memory', 'unknown'] | threshold=0.55", 'module': 'routing_engine', 'name': 'actions.routing_engine', 'process': (id=2052, name='MainProcess'), 'thread': (id=14328, name='MainThread'), 'time': datetime(2026, 6, 10, 20, 27, 51, 706048, tzinfo=datetime.timezone(datetime.timedelta(seconds=19800), 'India Standard Time'))}
+Traceback (most recent call last):
+  File "C:\anmol\HELL MARRY\GINI-ORACLE-1-resilience\.venv\Lib\site-packages\loguru\_handler.py", line 206, in emit
+    self._sink.write(str_record)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "C:\anmol\HELL MARRY\GINI-ORACLE-1-resilience\.venv\Lib\site-packages\loguru\_simple_sinks.py", line 16, in write
+    self._stream.write(message)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Dell\AppData\Local\Programs\Python\Python314\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f500' in position 88: character maps to <undefined>
+--- End of logging error ---
+--- Logging error in Loguru Handler #1 ---
+Record was: {'elapsed': datetime.timedelta(seconds=2, microseconds=179677), 'exception': None, 'extra': {'module': 'actions.action_router'}, 'file': (name='action_router.py', path='C:\\anmol\\HELL MARRY\\GINI-ORACLE-1-resilience\\GINI-ORACLE-1\\backend\\gini-ai-python\\actions\\action_router.py'), 'function': '__init__', 'level': (name='INFO', no=20, icon='\u2139\ufe0f'), 'line': 38, 'message': "\u26a1 ActionRouter initialized | modules=['smart_home', 'hospital', 'vehicle', 'mobile']", 'module': 'action_router', 'name': 'actions.action_router', 'process': (id=2052, name='MainProcess'), 'thread': (id=14328, name='MainThread'), 'time': datetime(2026, 6, 10, 20, 27, 51, 713283, tzinfo=datetime.timezone(datetime.timedelta(seconds=19800), 'India Standard Time'))}
+Traceback (most recent call last):
+  File "C:\anmol\HELL MARRY\GINI-ORACLE-1-resilience\.venv\Lib\site-packages\loguru\_handler.py", line 206, in emit
+    self._sink.write(str_record)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "C:\anmol\HELL MARRY\GINI-ORACLE-1-resilience\.venv\Lib\site-packages\loguru\_simple_sinks.py", line 16, in write
+    self._stream.write(message)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Dell\AppData\Local\Programs\Python\Python314\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u26a1' in position 87: character maps to <undefined>
+--- End of logging error ---
+--- Logging error in Loguru Handler #1 ---
+Record was: {'elapsed': datetime.timedelta(seconds=2, microseconds=185001), 'exception': None, 'extra': {'module': 'core.service_registry'}, 'file': (name='service_registry.py', path='C:\\anmol\\HELL MARRY\\GINI-ORACLE-1-resilience\\GINI-ORACLE-1\\backend\\gini-ai-python\\core\\service_registry.py'), 'function': 'register', 'level': (name='INFO', no=20, icon='\u2139\ufe0f'), 'line': 52, 'message': '  \U0001f4e6 Service registered: [action_router] \u2192 ActionRouter', 'module': 'service_registry', 'name': 'core.service_registry', 'process': (id=2052, name='MainProcess'), 'thread': (id=14328, name='MainThread'), 'time': datetime(2026, 6, 10, 20, 27, 51, 718607, tzinfo=datetime.timezone(datetime.timedelta(seconds=19800), 'India Standard Time'))}
+Traceback (most recent call last):
+  File "C:\anmol\HELL MARRY\GINI-ORACLE-1-resilience\.venv\Lib\site-packages\loguru\_handler.py", line 206, in emit
+    self._sink.write(str_record)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "C:\anmol\HELL MARRY\GINI-ORACLE-1-resilience\.venv\Lib\site-packages\loguru\_simple_sinks.py", line 16, in write
+    self._stream.write(message)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Dell\AppData\Local\Programs\Python\Python314\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4e6' in position 89: character maps to <undefined>
+--- End of logging error ---
+--- Logging error in Loguru Handler #1 ---
+Record was: {'elapsed': datetime.timedelta(seconds=2, microseconds=190747), 'exception': None, 'extra': {'module': 'core.assistant'}, 'file': (name='assistant.py', path='C:\\anmol\\HELL MARRY\\GINI-ORACLE-1-resilience\\GINI-ORACLE-1\\backend\\gini-ai-python\\core\\assistant.py'), 'function': '__init__', 'level': (name='INFO', no=20, icon='\u2139\ufe0f'), 'line': 53, 'message': '\U0001f9e0 GiniAssistant created | v1.0.0', 'module': 'assistant', 'name': 'core.assistant', 'process': (id=2052, name='MainProcess'), 'thread': (id=14328, name='MainThread'), 'time': datetime(2026, 6, 10, 20, 27, 51, 724353, tzinfo=datetime.timezone(datetime.timedelta(seconds=19800), 'India Standard Time'))}
+Traceback (most recent call last):
+  File "C:\anmol\HELL MARRY\GINI-ORACLE-1-resilience\.venv\Lib\site-packages\loguru\_handler.py", line 206, in emit
+    self._sink.write(str_record)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "C:\anmol\HELL MARRY\GINI-ORACLE-1-resilience\.venv\Lib\site-packages\loguru\_simple_sinks.py", line 16, in write
+    self._stream.write(message)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Dell\AppData\Local\Programs\Python\Python314\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f9e0' in position 80: character maps to <undefined>
+--- End of logging error ---
+--- Logging error in Loguru Handler #1 ---
+Record was: {'elapsed': datetime.timedelta(seconds=2, microseconds=198094), 'exception': None, 'extra': {'module': 'core.assistant'}, 'file': (name='assistant.py', path='C:\\anmol\\HELL MARRY\\GINI-ORACLE-1-resilience\\GINI-ORACLE-1\\backend\\gini-ai-python\\core\\assistant.py'), 'function': 'on_startup', 'level': (name='INFO', no=20, icon='\u2139\ufe0f'), 'line': 62, 'message': '\u2705 GiniAssistant is ready | Emotion engine: True', 'module': 'assistant', 'name': 'core.assistant', 'process': (id=2052, name='MainProcess'), 'thread': (id=14328, name='MainThread'), 'time': datetime(2026, 6, 10, 20, 27, 51, 731700, tzinfo=datetime.timezone(datetime.timedelta(seconds=19800), 'India Standard Time'))}
+Traceback (most recent call last):
+  File "C:\anmol\HELL MARRY\GINI-ORACLE-1-resilience\.venv\Lib\site-packages\loguru\_handler.py", line 206, in emit
+    self._sink.write(str_record)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "C:\anmol\HELL MARRY\GINI-ORACLE-1-resilience\.venv\Lib\site-packages\loguru\_simple_sinks.py", line 16, in write
+    self._stream.write(message)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Dell\AppData\Local\Programs\Python\Python314\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2705' in position 80: character maps to <undefined>
+--- End of logging error ---
+--- Logging error in Loguru Handler #1 ---
+Record was: {'elapsed': datetime.timedelta(seconds=2, microseconds=203285), 'exception': None, 'extra': {'module': 'core.assistant'}, 'file': (name='assistant.py', path='C:\\anmol\\HELL MARRY\\GINI-ORACLE-1-resilience\\GINI-ORACLE-1\\backend\\gini-ai-python\\core\\assistant.py'), 'function': '_run_pipeline', 'level': (name='INFO', no=20, icon='\u2139\ufe0f'), 'line': 128, 'message': '\U0001f4e9 [test_user] \u2192 hello', 'module': 'assistant', 'name': 'core.assistant', 'process': (id=2052, name='MainProcess'), 'thread': (id=14328, name='MainThread'), 'time': datetime(2026, 6, 10, 20, 27, 51, 736891, tzinfo=datetime.timezone(datetime.timedelta(seconds=19800), 'India Standard Time'))}
+Traceback (most recent call last):
+  File "C:\anmol\HELL MARRY\GINI-ORACLE-1-resilience\.venv\Lib\site-packages\loguru\_handler.py", line 206, in emit
+    self._sink.write(str_record)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "C:\anmol\HELL MARRY\GINI-ORACLE-1-resilience\.venv\Lib\site-packages\loguru\_simple_sinks.py", line 16, in write
+    self._stream.write(message)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Dell\AppData\Local\Programs\Python\Python314\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4e9' in position 80: character maps to <undefined>
+--- End of logging error ---
+--- Logging error in Loguru Handler #1 ---
+Record was: {'elapsed': datetime.timedelta(seconds=2, microseconds=280094), 'exception': None, 'extra': {'module': 'core.assistant'}, 'file': (name='assistant.py', path='C:\\anmol\\HELL MARRY\\GINI-ORACLE-1-resilience\\GINI-ORACLE-1\\backend\\gini-ai-python\\core\\assistant.py'), 'function': '_run_pipeline', 'level': (name='INFO', no=20, icon='\u2139\ufe0f'), 'line': 180, 'message': "\U0001f4ac [test_user] \u2190 Hey! I'm Gini. How can I help you today?", 'module': 'assistant', 'name': 'core.assistant', 'process': (id=2052, name='MainProcess'), 'thread': (id=14328, name='MainThread'), 'time': datetime(2026, 6, 10, 20, 27, 51, 813700, tzinfo=datetime.timezone(datetime.timedelta(seconds=19800), 'India Standard Time'))}
+Traceback (most recent call last):
+  File "C:\anmol\HELL MARRY\GINI-ORACLE-1-resilience\.venv\Lib\site-packages\loguru\_handler.py", line 206, in emit
+    self._sink.write(str_record)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "C:\anmol\HELL MARRY\GINI-ORACLE-1-resilience\.venv\Lib\site-packages\loguru\_simple_sinks.py", line 16, in write
+    self._stream.write(message)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Dell\AppData\Local\Programs\Python\Python314\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4ac' in position 80: character maps to <undefined>
+--- End of logging error ---
+Traceback (most recent call last):
+  File "C:\anmol\HELL MARRY\GINI-ORACLE-1-resilience\GINI-ORACLE-1\backend\gini-ai-python\validate_local_intel.py", line 160, in <module>
+    p, t = asyncio.run(run_pipeline_tests())
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Dell\AppData\Local\Programs\Python\Python314\Lib\asyncio\runners.py", line 204, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "C:\Users\Dell\AppData\Local\Programs\Python\Python314\Lib\asyncio\runners.py", line 127, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Dell\AppData\Local\Programs\Python\Python314\Lib\asyncio\base_events.py", line 719, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "C:\anmol\HELL MARRY\GINI-ORACLE-1-resilience\GINI-ORACLE-1\backend\gini-ai-python\validate_local_intel.py", line 156, in run_pipeline_tests
+    print(f"  {marker}: '{msg[:40]}' \u2192 '{response[:70]}'")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Dell\AppData\Local\Programs\Python\Python314\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2192' in position 16: character maps to <undefined>

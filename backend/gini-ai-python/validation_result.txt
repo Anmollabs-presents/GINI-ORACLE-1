@@ -1,0 +1,9 @@
+PYTEST: ============================= 85 passed in 3.75s ============================== (exit=0)
+test_task5_tts: PASS
+test_task6_wake: PASS
+test_task7_app: PASS
+test_task8_sys: PASS
+test_task9_web: PASS
+test_task10_media: PASS
+test_task11_util: PASS
+SYNTAX CHECK: ALL OK (14 files)

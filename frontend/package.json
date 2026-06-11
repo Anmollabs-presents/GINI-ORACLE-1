@@ -1,0 +1,31 @@
+{
+  "name": "gini-ai-frontend",
+  "version": "1.0.0",
+  "description": "Web UI for GINI-AI Assistant with state-integrated communication",
+  "author": "GINI-ORACLE-1 Team",
+  "license": "MIT",
+  "scripts": {
+    "serve": "python server.py",
+    "dev": "python -m http.server 3000",
+    "test": "echo 'Run tests with your test runner'"
+  },
+  "files": [
+    "index.html",
+    "api.js",
+    "state.js",
+    "ui.js",
+    "app.js",
+    "styles.css",
+    "server.py",
+    "README.md"
+  ],
+  "keywords": [
+    "gini",
+    "assistant",
+    "ai",
+    "ui",
+    "frontend",
+    "state-management"
+  ],
+  "devDependencies": {}
+}

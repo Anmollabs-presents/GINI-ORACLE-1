@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GINI-AI Assistant</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>🌟 GINI-AI Assistant</h1>
+            <div class="status-indicator">
+                <span id="status-dot" class="status-dot idle"></span>
+                <span id="status-text" class="status-text">Idle</span>
+            </div>
+        </header>
+
+        <!-- System Status -->
+        <section class="system-status">
+            <div class="status-item">
+                <label>Assistant:</label>
+                <span id="assistant-status">Loading...</span>
+            </div>
+            <div class="status-item">
+                <label>Session:</label>
+                <span id="session-id">—</span>
+            </div>
+            <div class="status-item">
+                <label>User:</label>
+                <span id="user-id">default</span>
+            </div>
+        </section>
+
+        <!-- Chat Display -->
+        <section class="chat-display">
+            <div id="chat-messages" class="chat-messages">
+                <div class="message system">
+                    <p>Welcome to GINI-AI! Send a message to get started.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Input Area -->
+        <section class="input-area">
+            <div class="input-container">
+                <input
+                    type="text"
+                    id="message-input"
+                    class="message-input"
+                    placeholder="Type your command or question..."
+                    disabled
+                >
+                <button
+                    id="send-button"
+                    class="send-button"
+                    disabled
+                >
+                    Send
+                </button>
+            </div>
+            <div class="input-hint" id="input-hint"></div>
+        </section>
+
+        <!-- State Indicator -->
+        <section class="state-info">
+            <div class="state-details">
+                <p><strong>Current State:</strong> <span id="current-state">idle</span></p>
+                <p><strong>Last Response Emotion:</strong> <span id="last-emotion">—</span></p>
+                <p id="error-display" class="error-display" style="display: none;"></p>
+            </div>
+        </section>
+
+        <!-- Quick Actions -->
+        <section class="quick-actions">
+            <button class="action-btn" data-command="what is photosynthesis">What is photosynthesis?</button>
+            <button class="action-btn" data-command="play music">Play music</button>
+            <button class="action-btn" data-command="set a 10 minute timer">Set timer</button>
+            <button class="action-btn" data-command="search for today's news">Search news</button>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>GINI-ORACLE-1 • v1.0.0 • <a href="/status" target="_blank">System Status</a></p>
+        </footer>
+    </div>
+
+    <script src="api.js"></script>
+    <script src="state.js"></script>
+    <script src="ui.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
