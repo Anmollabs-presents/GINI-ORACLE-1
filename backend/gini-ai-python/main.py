@@ -4,8 +4,9 @@
 # ============================================================
 
 import uvicorn
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request, Header, Depends
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 
@@ -158,8 +159,11 @@ async def chat(request: MessageRequest):
 
 
 @app.post("/action", tags=["Actions"])
-async def execute_action(intent: str, payload: dict = {}):
-    """Execute a device control action via Gini."""
+async def execute_action(intent: str, payload: dict = {}, x_api_key: str = Header(None)):
+    """Execute a device control action via Gini. Requires X-API-Key."""
+    if not x_api_key or x_api_key != settings.api_key:
+        raise HTTPException(status_code=401, detail="Unauthorized: Invalid or missing X-API-KEY")
+        
     assistant: GiniAssistant = app.state.assistant
     result = await assistant.execute_action(intent=intent, payload=payload)
     return result

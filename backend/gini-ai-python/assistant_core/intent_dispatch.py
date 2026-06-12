@@ -23,6 +23,7 @@ from utils.logger import get_logger
 from config.settings import settings
 from assistant_core.ai_provider import get_ai_provider
 from assistant_core.identity import IdentityManager
+from assistant_core.response_engine import get_response_engine
 
 log = get_logger(__name__)
 
@@ -58,6 +59,24 @@ async def dispatch(
         return "I am not fully configured. The AI provider API key is missing."
 
     try:
+        # ── ROUTING INTERCEPTION (FAST PATH & ACTIONS) ────────
+        # 1. Check local response engine (greetings, math, time)
+        response_engine = get_response_engine()
+        handled, local_response = response_engine.generate(text)
+        if handled:
+            log.info(f"[LOCAL RESPONSE GENERATED] user_id={user_id} | source=ResponseEngine | intent=fast_path")
+            log.info(f"[FINAL RESPONSE RETURNED TO FRONTEND] user_id={user_id} | source=ResponseEngine | len={len(local_response)} chars")
+            return local_response
+
+        # 2. Check local routing engine (apps, system actions, web search)
+        if routing_engine:
+            log.info("[ROUTING ENGINE EXECUTED] Evaluating command.")
+            route_result = await routing_engine.route(raw_input=text, user_id=user_id, session_id=session_id)
+            if route_result.status == "ok" and route_result.intent not in ("unknown", "question_answer"):
+                log.info(f"[LOCAL ACTION EXECUTED] user_id={user_id} | intent={route_result.intent} | sub={route_result.sub_intent}")
+                log.info(f"[FINAL RESPONSE RETURNED TO FRONTEND] user_id={user_id} | source=RoutingEngine | len={len(route_result.response)} chars")
+                return route_result.response
+
         # Build system instruction
         memories = {}
         if memory:
@@ -100,19 +119,24 @@ async def dispatch(
             response = _apply_emotion_tone(ai_response.strip(), emotion, emotion_trend)
 
             # ── DIAGNOSTIC: RESPONSE RETURNED TO FRONTEND ─
-            log.info(f"[RESPONSE RETURNED TO FRONTEND] user_id={user_id} | source=AI_Provider | len={len(response)} chars")
+            log.info(f"[FINAL RESPONSE RETURNED TO FRONTEND] user_id={user_id} | source=AI_Provider | len={len(response)} chars")
             return response
 
         else:
             log.warning("[API CALL VERIFICATION] FAILED: Provider returned an empty string.")
-            return _HARD_ERROR
+            return "The AI API returned an empty response. Please try again."
 
     except Exception as e:
         # ── API CALL VERIFICATION: FAILED ─────────────────────
         error_str = str(e)
         _log_engine_failure(error_str)
         log.error(f"[API CALL VERIFICATION] FAILED: Exception thrown during API call.")
-        return _HARD_ERROR
+        
+        error_lower = error_str.lower()
+        if "429" in error_str or "rate limit" in error_lower or "quota" in error_lower:
+            return "The AI API is currently rate-limited (Too Many Requests). Please try again in a few seconds."
+            
+        return "Unable to reach the AI provider due to a network or configuration error."
 
 
 def _log_engine_failure(error_str: str) -> None:
