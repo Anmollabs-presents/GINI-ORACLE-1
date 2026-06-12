@@ -6,6 +6,7 @@
     <title>GINI AI — Emotion-Aware Cognitive Ecosystem</title>
     <meta name="description" content="GINI AI: An ecosystem with active SQLite memory indexing, voice loop capabilities, and automated OS actions.">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="chat-master.css">
 </head>
 <body>
     <div class="app-layout">
@@ -17,36 +18,93 @@
                 <span class="brand-text">GINI Ecosystem</span>
             </div>
             <nav class="sidebar-nav">
-                <button class="sidebar-item active" data-tab="home" title="Home Portal">
-                    <span class="sidebar-icon">🏠</span>
-                    <span class="sidebar-text">Home Portal</span>
-                </button>
-                <button class="sidebar-item" data-tab="chat" title="Chat Workspace">
-                    <span class="sidebar-icon">💬</span>
-                    <span class="sidebar-text">Chat Workspace</span>
-                </button>
-                <button class="sidebar-item" data-tab="memory" title="Memory Vault">
-                    <span class="sidebar-icon">🧠</span>
-                    <span class="sidebar-text">Memory Vault</span>
-                </button>
-                <button class="sidebar-item" data-tab="actions" title="Action Console">
-                    <span class="sidebar-icon">⚡</span>
-                    <span class="sidebar-text">Action Console</span>
-                </button>
-                <button class="sidebar-item" data-tab="speech" title="Speech Labs">
-                    <span class="sidebar-icon">🎛️</span>
-                    <span class="sidebar-text">Speech Labs</span>
-                </button>
-                <button class="sidebar-item" data-tab="settings" title="Ecosystem Settings">
-                    <span class="sidebar-icon">⚙️</span>
-                    <span class="sidebar-text">Settings</span>
-                </button>
+                <!-- Old Nav Items (Hidden in Chat Master Theme) -->
+                <div class="legacy-nav-items">
+                    <button class="sidebar-item active" data-tab="home" title="Home Portal">
+                        <span class="sidebar-icon">🏠</span>
+                        <span class="sidebar-text">Home Portal</span>
+                    </button>
+                    <button class="sidebar-item" data-tab="chat" title="Chat Workspace">
+                        <span class="sidebar-icon">💬</span>
+                        <span class="sidebar-text">Chat Workspace</span>
+                    </button>
+                    <button class="sidebar-item" data-tab="memory" title="Memory Vault">
+                        <span class="sidebar-icon">🧠</span>
+                        <span class="sidebar-text">Memory Vault</span>
+                    </button>
+                    <button class="sidebar-item" data-tab="actions" title="Action Console">
+                        <span class="sidebar-icon">⚡</span>
+                        <span class="sidebar-text">Action Console</span>
+                    </button>
+                    <button class="sidebar-item" data-tab="speech" title="Speech Labs">
+                        <span class="sidebar-icon">🎛️</span>
+                        <span class="sidebar-text">Speech Labs</span>
+                    </button>
+                    <button class="sidebar-item" data-tab="settings" title="Ecosystem Settings">
+                        <span class="sidebar-icon">⚙️</span>
+                        <span class="sidebar-text">Settings</span>
+                    </button>
+                </div>
+
+                <!-- New Master Design Nav Items (Only visible in Chat Master Theme) -->
+                <div class="chat-master-nav-items" style="display: none;">
+                    <button class="sidebar-item active" data-tab="chat" title="Chat">
+                        <span class="sidebar-icon">💬</span>
+                        <span class="sidebar-text">Chat</span>
+                    </button>
+                    <button class="sidebar-item" title="Library">
+                        <span class="sidebar-icon">📚</span>
+                        <span class="sidebar-text">Library</span>
+                    </button>
+                    <button class="sidebar-item" title="Projects">
+                        <span class="sidebar-icon">📁</span>
+                        <span class="sidebar-text">Projects</span>
+                    </button>
+                    <button class="sidebar-item" title="Apps">
+                        <span class="sidebar-icon">🧩</span>
+                        <span class="sidebar-text">Apps</span>
+                    </button>
+                    <button class="sidebar-item" title="More">
+                        <span class="sidebar-icon">⋯</span>
+                        <span class="sidebar-text">More</span>
+                    </button>
+
+                    <div class="sidebar-section-title">
+                        <span>Projects</span>
+                        <button class="add-btn">⊕</button>
+                    </div>
+                    <div class="empty-projects">
+                        No projects yet
+                        <button>+ New Project</button>
+                    </div>
+
+                    <div class="sidebar-section-title">
+                        <span>Recent</span>
+                    </div>
+                    <div id="recent-list-container">
+                        <button class="sidebar-item" style="padding: 8px 14px;">
+                            <span class="sidebar-icon" style="font-size: 14px;">💬</span>
+                            <span class="sidebar-text" style="font-size: 13px;">Who is the PM of India?</span>
+                        </button>
+                        <button class="sidebar-item" style="padding: 8px 14px;">
+                            <span class="sidebar-icon" style="font-size: 14px;">💬</span>
+                            <span class="sidebar-text" style="font-size: 13px;">Python project ideas</span>
+                        </button>
+                    </div>
+                </div>
             </nav>
             <div class="sidebar-footer">
                 <button class="sidebar-item" id="clearChatBtn" title="Clear Chat messages">
                     <span class="sidebar-icon">🗑️</span>
                     <span class="sidebar-text">Clear Chat</span>
                 </button>
+            </div>
+            <div class="user-profile-footer">
+                <div class="avatar">AS</div>
+                <div class="user-info">
+                    <span class="user-name">Anmol Srivastav</span>
+                    <span class="user-email">anmol@anmol.com</span>
+                </div>
             </div>
         </aside>
 
@@ -129,17 +187,24 @@
                 <!-- 2. CHAT WORKSPACE PANEL -->
                 <section class="tab-panel" id="panel-chat">
                     <div class="chat-display-wrapper">
-                        <div class="chat-display" aria-label="Chat messages">
-                            <div id="chat-messages" class="chat-messages" role="log" aria-live="polite">
-                                <div class="message system">
-                                    <p>👋 Hi! I'm Gini. Type or tap 🎤 to speak with me.</p>
-                                </div>
-                            </div>
+                        <!-- Embedded Gini Core Orb Background -->
+                        <div class="orb-background" id="orbBackground">
+                            <div class="orb-ring orb-ring-1"></div>
+                            <div class="orb-ring orb-ring-2"></div>
+                            <div class="orb-node orb-node-1"></div>
+                            <div class="orb-node orb-node-2"></div>
+                            <div class="orb-node orb-center"></div>
                         </div>
 
-                        <!-- Mini Core in Chat Header Panel (Visible when chat has messages and core transitions) -->
-                        <div class="chat-core-indicator" id="chatCoreIndicator">
-                            <!-- Core gets mirrored here conditionally or header shrinks -->
+                        <div class="chat-display" aria-label="Chat messages">
+                            <div id="chat-messages" class="chat-messages" role="log" aria-live="polite">
+                                <div class="chat-date-divider"><span>Today</span></div>
+                                <div class="message assistant">
+                                    <p>Hi! I'm Gini.</p>
+                                    <p>How can I help you today?</p>
+                                    <span class="message-time" id="initialMsgTime"></span>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -170,7 +235,13 @@
                                 class="send-button"
                                 disabled
                                 aria-label="Send message"
-                            >Send</button>
+                            >
+                                Send
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="22" y1="2" x2="11" y2="13"/>
+                                    <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                                </svg>
+                            </button>
                         </div>
                         <div class="input-hint" id="input-hint"></div>
                     </div>

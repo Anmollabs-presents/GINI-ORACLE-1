@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anmol Labs — A Premium Ecosystem of Creations</title>
+  <meta name="description" content="Anmol Labs is a premium ecosystem of intelligent creations — from Gini AI to EchoFy, BioForge, and beyond. Discover the future of software.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="homepage.css">
+</head>
+<body>
+
+  <!-- ── Navigation ──────────────────────────────────────── -->
+  <header role="banner">
+    <nav class="nav" id="mainNav" aria-label="Main navigation">
+      <a href="#" class="nav-logo" aria-label="Anmol Labs home">
+        <!-- Minimal flat logo mark -->
+        <div class="nav-logo-mark" aria-hidden="true">
+          <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="36" height="36" rx="9" fill="#dce8f5"/>
+            <!-- A letterform: simplified A shape -->
+            <path d="M10 26L18 10L26 26" stroke="#4a7ab5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M13 21H23" stroke="#4a7ab5" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="nav-logo-text">
+          <span class="nav-logo-title">Anmol Labs</span>
+          <span class="nav-logo-sub">Presents</span>
+        </div>
+      </a>
+
+      <ul class="nav-links" role="list">
+        <li><a href="#" class="active">Home</a></li>
+        <li><a href="#creations">Creations</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#labs">Labs</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <button class="nav-search-btn" aria-label="Search" id="searchBtn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+        </button>
+        <button class="nav-signin-btn" id="signinBtn">Sign In</button>
+        <button class="nav-mobile-toggle" id="mobileToggle" aria-label="Toggle menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <!-- ── Hero Section ─────────────────────────────────── -->
+    <section class="hero" id="home" aria-label="Hero">
+      <div class="hero-inner">
+
+        <!-- Left: Text content -->
+        <div class="hero-left">
+          <div class="hero-badge">
+            <span class="hero-badge-dot" aria-hidden="true"></span>
+            AI. Innovation. Impact.
+          </div>
+
+          <h1 class="hero-headline">
+            Your next big<br>idea starts here
+          </h1>
+
+          <p class="hero-sub">
+            The ideal framework to learn how to manage all aspects of AI ecosystems.
+          </p>
+
+          <a href="#creations" class="hero-cta" id="heroExploreBtn">
+            Explore Anmol Labs
+            <span class="hero-cta-arrow" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </span>
+          </a>
+        </div>
+
+        <!-- Right: Illustration + Orb -->
+        <div class="hero-right" aria-hidden="true">
+          <div class="hero-illustration">
+
+            <!-- Minimal elegant orb -->
+            <div class="hero-orb">
+              <div class="orb-ring-2"></div>
+              <div class="orb-ring"></div>
+              <div class="orb-core"></div>
+            </div>
+
+            <!-- Person at desk illustration (clean line art, pastel) -->
+            <svg viewBox="0 0 380 360" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Person working at desk illustration">
+              <!-- Desk -->
+              <rect x="100" y="240" width="200" height="8" rx="4" fill="#c8d8e8" opacity="0.8"/>
+              <!-- Desk legs -->
+              <rect x="108" y="248" width="6" height="60" rx="3" fill="#b8c8d8"/>
+              <rect x="266" y="248" width="6" height="60" rx="3" fill="#b8c8d8"/>
+              <!-- Cross bar -->
+              <rect x="108" y="290" width="164" height="4" rx="2" fill="#c0d0e0"/>
+
+              <!-- Chair base -->
+              <ellipse cx="200" cy="315" rx="38" ry="10" fill="#d0dce8" opacity="0.7"/>
+              <!-- Chair pole -->
+              <rect x="197" y="260" width="6" height="56" rx="3" fill="#c0ccd8"/>
+              <!-- Chair seat -->
+              <path d="M165 262 Q200 256 235 262 L232 275 Q200 282 168 275 Z" fill="#dce8f2"/>
+              <!-- Chair back -->
+              <path d="M172 210 Q200 204 228 210 L232 262 Q200 268 168 262 Z" fill="#e0eaf5" stroke="#ccdaec" stroke-width="1"/>
+              <!-- Chair arm left -->
+              <path d="M168 240 L155 240 L155 260 L168 262" stroke="#c0ccd8" stroke-width="3" stroke-linecap="round" fill="none"/>
+              <!-- Chair arm right -->
+              <path d="M232 240 L245 240 L245 260 L232 262" stroke="#c0ccd8" stroke-width="3" stroke-linecap="round" fill="none"/>
+
+              <!-- Person body/torso -->
+              <path d="M186 190 Q186 220 182 250 L218 250 Q214 220 214 190 Z" fill="#e8c4a0" opacity="0.9"/>
+              <!-- Shirt/jacket -->
+              <path d="M183 200 Q186 218 182 250 L218 250 Q214 218 217 200 Q200 194 183 200Z" fill="#d4a8c0" opacity="0.85"/>
+              <!-- Collar -->
+              <path d="M193 198 L200 210 L207 198" stroke="#c898b0" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+              <!-- Left arm on desk -->
+              <path d="M183 205 Q170 218 165 238 L185 240 Q182 225 190 215Z" fill="#e8c4a0"/>
+              <!-- Left hand on desk -->
+              <ellipse cx="173" cy="240" rx="12" ry="7" fill="#e8c4a0" transform="rotate(-15 173 240)"/>
+
+              <!-- Right arm -->
+              <path d="M217 205 Q230 215 240 225 L235 235 Q222 222 210 212Z" fill="#e8c4a0"/>
+              <!-- Right hand gesturing up -->
+              <path d="M235 230 Q242 220 248 212 L252 215 Q245 225 240 236Z" fill="#e8c4a0"/>
+
+              <!-- Neck -->
+              <rect x="194" y="178" width="12" height="18" rx="6" fill="#e8c4a0"/>
+
+              <!-- Head -->
+              <ellipse cx="200" cy="162" rx="26" ry="28" fill="#f0d0b4"/>
+              <!-- Hair -->
+              <path d="M174 158 Q175 132 200 130 Q225 132 226 158 Q218 148 200 147 Q182 148 174 158Z" fill="#8b6b4a"/>
+              <!-- Hair side -->
+              <path d="M174 158 Q170 165 172 175" stroke="#8b6b4a" stroke-width="4" stroke-linecap="round" fill="none"/>
+              <!-- Face features -->
+              <!-- Eyes -->
+              <ellipse cx="191" cy="160" rx="3" ry="3.5" fill="#5a4535"/>
+              <ellipse cx="209" cy="160" rx="3" ry="3.5" fill="#5a4535"/>
+              <!-- Eye shine -->
+              <circle cx="192" cy="158.5" r="1" fill="white"/>
+              <circle cx="210" cy="158.5" r="1" fill="white"/>
+              <!-- Eyebrows -->
+              <path d="M187 154 Q191 152 195 154" stroke="#7a5a40" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+              <path d="M205 154 Q209 152 213 154" stroke="#7a5a40" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+              <!-- Smile -->
+              <path d="M194 170 Q200 175 206 170" stroke="#c0907a" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+              <!-- Nose -->
+              <path d="M198 163 Q200 167 202 163" stroke="#d4a888" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+              <!-- Cheek blush -->
+              <ellipse cx="187" cy="168" rx="5" ry="3" fill="#f0a898" opacity="0.35"/>
+              <ellipse cx="213" cy="168" rx="5" ry="3" fill="#f0a898" opacity="0.35"/>
+
+              <!-- Ear -->
+              <ellipse cx="174" cy="165" rx="5" ry="7" fill="#f0d0b4"/>
+              <ellipse cx="226" cy="165" rx="5" ry="7" fill="#f0d0b4"/>
+
+              <!-- Laptop -->
+              <rect x="148" y="216" width="100" height="66" rx="6" fill="#e8eef5" stroke="#ccd4e0" stroke-width="1.5"/>
+              <!-- Laptop screen -->
+              <rect x="154" y="222" width="88" height="52" rx="3" fill="#f0f4f8"/>
+              <!-- Screen content - abstract UI lines -->
+              <rect x="160" y="228" width="50" height="5" rx="2.5" fill="#dce8f0"/>
+              <rect x="160" y="236" width="35" height="3" rx="1.5" fill="#e8eff5"/>
+              <rect x="160" y="242" width="42" height="3" rx="1.5" fill="#e8eff5"/>
+              <rect x="160" y="250" width="28" height="3" rx="1.5" fill="#e8eff5"/>
+              <!-- Screen accent - small colored blocks -->
+              <rect x="218" y="228" width="18" height="12" rx="3" fill="#c8d8f0"/>
+              <rect x="218" y="243" width="18" height="8" rx="3" fill="#d8e8c8"/>
+              <!-- Laptop hinge -->
+              <rect x="148" y="280" width="100" height="4" rx="2" fill="#d0dce8"/>
+              <!-- Laptop base -->
+              <path d="M146 284 L148 296 L252 296 L254 284Z" fill="#dce8f0" stroke="#ccd4e0" stroke-width="1"/>
+              <!-- Touchpad -->
+              <rect x="186" y="286" width="28" height="6" rx="3" fill="#c8d4e0"/>
+
+              <!-- Desk items -->
+              <!-- Coffee cup -->
+              <rect x="274" y="222" width="24" height="22" rx="5" fill="#f5e8d8"/>
+              <path d="M298 228 Q308 228 308 234 Q308 240 298 240" stroke="#e8d0b8" stroke-width="2" fill="none" stroke-linecap="round"/>
+              <ellipse cx="286" cy="222" rx="12" ry="3" fill="#e8d8c4"/>
+              <!-- Cup steam -->
+              <path d="M283 218 Q285 212 283 207" stroke="#d0c4b0" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.6"/>
+              <path d="M287 216 Q289 210 287 204" stroke="#d0c4b0" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.4"/>
+
+              <!-- Small plant left -->
+              <rect x="112" y="224" width="12" height="18" rx="3" fill="#b8c8b8"/>
+              <path d="M118 224 Q115 210 110 204 Q116 208 118 215 Q120 208 126 204 Q121 210 118 224Z" fill="#8ab898"/>
+              <path d="M118 220 Q113 212 108 210 Q114 214 118 222Z" fill="#78a880" opacity="0.7"/>
+
+              <!-- Desk scattered items -->
+              <rect x="272" y="248" width="16" height="20" rx="2" fill="#f0e8f8" opacity="0.8"/>
+              <rect x="290" y="251" width="12" height="17" rx="2" fill="#e8f0f8" opacity="0.8"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scroll indicator -->
+      <div class="scroll-indicator" aria-label="Scroll to explore">
+        <div class="scroll-mouse" aria-hidden="true">
+          <div class="scroll-wheel"></div>
+        </div>
+        <span>Scroll to explore</span>
+        <div class="scroll-dots" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Stacked Cards Section ─────────────────────────── -->
+    <section class="cards-section" id="creations" aria-label="Anmol Labs creations">
+      <div class="cards-wrapper">
+
+        <!-- CARD 1: Gini (Featured) -->
+        <article class="project-card card-gini card-featured" id="card-gini">
+          <!-- Floating orb — purely decorative, absolutely positioned -->
+          <div class="card-gini-visual" aria-hidden="true">
+            <div class="mini-orb">
+              <div class="mini-orb-ring-2"></div>
+              <div class="mini-orb-ring"></div>
+              <div class="mini-orb-core"></div>
+            </div>
+          </div>
+
+          <div class="card-inner">
+            <div class="card-number" aria-label="Project number 01">01</div>
+
+            <div class="card-icon-wrap">
+              <div class="card-icon">
+                <!-- Gini orbit icon -->
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <circle cx="20" cy="20" r="8" fill="#c4a8e8" opacity="0.7"/>
+                  <circle cx="20" cy="20" r="5" fill="#9b72cf" opacity="0.9"/>
+                  <circle cx="20" cy="8" r="3.5" fill="#b890d8" opacity="0.8"/>
+                  <circle cx="32" cy="26" r="3" fill="#d4b8f0" opacity="0.7"/>
+                  <circle cx="10" cy="28" r="2.5" fill="#a880c8" opacity="0.6"/>
+                  <circle cx="20" cy="20" r="13" stroke="#b8a0d8" stroke-width="1" opacity="0.4"/>
+                  <circle cx="20" cy="20" r="17" stroke="#c8b8e0" stroke-width="0.8" opacity="0.25"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="card-text">
+              <div class="card-meta">
+                <h2 class="card-name">Gini</h2>
+              </div>
+              <p class="card-category">AI Assistant</p>
+              <p class="card-desc">Your intelligent AI companion<br>for productivity and life.</p>
+              <a href="index.html" class="card-launch-btn" id="launchGiniBtn">
+                Launch Gini
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                </svg>
+              </a>
+            </div>
+
+            <!-- Empty 4th column placeholder — orb is absolute -->
+            <div aria-hidden="true"></div>
+          </div>
+        </article>
+
+        <!-- CARD 2: EchoFy -->
+        <article class="project-card card-echo" id="card-echofy">
+          <div class="card-inner">
+            <div class="card-number" aria-label="Project number 02">02</div>
+
+            <div class="card-icon-wrap">
+              <div class="card-icon">
+                <!-- Sound wave icon -->
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <line x1="4" y1="20" x2="4" y2="20" stroke="#f0b8cc" stroke-width="2.5" stroke-linecap="round"/>
+                  <line x1="9" y1="16" x2="9" y2="24" stroke="#e8a0b8" stroke-width="2.5" stroke-linecap="round"/>
+                  <line x1="14" y1="11" x2="14" y2="29" stroke="#d48ba8" stroke-width="2.5" stroke-linecap="round"/>
+                  <line x1="19" y1="8" x2="19" y2="32" stroke="#c87898" stroke-width="2.5" stroke-linecap="round"/>
+                  <line x1="24" y1="11" x2="24" y2="29" stroke="#d48ba8" stroke-width="2.5" stroke-linecap="round"/>
+                  <line x1="29" y1="15" x2="29" y2="25" stroke="#e8a0b8" stroke-width="2.5" stroke-linecap="round"/>
+                  <line x1="34" y1="18" x2="34" y2="22" stroke="#f0b8cc" stroke-width="2.5" stroke-linecap="round"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="card-text">
+              <div class="card-meta">
+                <h2 class="card-name">EchoFy</h2>
+              </div>
+              <p class="card-category">Voice Studio</p>
+              <p class="card-desc">Transform your voice,<br>create with power.</p>
+            </div>
+
+            <a href="#" class="card-cta" aria-label="Explore EchoFy">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </a>
+          </div>
+        </article>
+
+        <!-- CARD 3: BioForge -->
+        <article class="project-card card-bio" id="card-bioforge">
+          <div class="card-inner">
+            <div class="card-number" aria-label="Project number 03">03</div>
+
+            <div class="card-icon-wrap">
+              <div class="card-icon">
+                <!-- DNA helix icon -->
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <!-- DNA backbone strands -->
+                  <path d="M14 6 Q22 13 14 20 Q6 27 14 34" stroke="#5aaa8a" stroke-width="2" stroke-linecap="round" fill="none"/>
+                  <path d="M26 6 Q18 13 26 20 Q34 27 26 34" stroke="#7bbfaa" stroke-width="2" stroke-linecap="round" fill="none"/>
+                  <!-- Rungs -->
+                  <line x1="14" y1="11" x2="26" y2="11" stroke="#8acfb8" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+                  <line x1="11" y1="17" x2="29" y2="17" stroke="#8acfb8" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+                  <line x1="11" y1="23" x2="29" y2="23" stroke="#8acfb8" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+                  <line x1="14" y1="29" x2="26" y2="29" stroke="#8acfb8" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+                  <!-- Node dots -->
+                  <circle cx="14" cy="11" r="2" fill="#5aaa8a"/>
+                  <circle cx="26" cy="11" r="2" fill="#7bbfaa"/>
+                  <circle cx="11" cy="17" r="2" fill="#5aaa8a"/>
+                  <circle cx="29" cy="17" r="2" fill="#7bbfaa"/>
+                  <circle cx="11" cy="23" r="2" fill="#5aaa8a"/>
+                  <circle cx="29" cy="23" r="2" fill="#7bbfaa"/>
+                  <circle cx="14" cy="29" r="2" fill="#5aaa8a"/>
+                  <circle cx="26" cy="29" r="2" fill="#7bbfaa"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="card-text">
+              <div class="card-meta">
+                <h2 class="card-name">BioForge</h2>
+              </div>
+              <p class="card-category">Bioinformatics</p>
+              <p class="card-desc">Decode life.<br>Discover the future.</p>
+            </div>
+
+            <a href="#" class="card-cta" aria-label="Explore BioForge">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </a>
+          </div>
+        </article>
+
+        <!-- CARD 4: CodeCraft -->
+        <article class="project-card card-code" id="card-codecraft">
+          <div class="card-inner">
+            <div class="card-number" aria-label="Project number 04">04</div>
+
+            <div class="card-icon-wrap">
+              <div class="card-icon">
+                <!-- Code brackets icon -->
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <!-- Browser window -->
+                  <rect x="6" y="8" width="28" height="24" rx="4" stroke="#6a8fd4" stroke-width="2" fill="#c0d0f0" opacity="0.3"/>
+                  <!-- Browser toolbar -->
+                  <rect x="6" y="8" width="28" height="8" rx="4" fill="#a0b8e8" opacity="0.5"/>
+                  <circle cx="12" cy="12" r="1.5" fill="#f0d0d0" opacity="0.8"/>
+                  <circle cx="17" cy="12" r="1.5" fill="#f0f0c0" opacity="0.8"/>
+                  <circle cx="22" cy="12" r="1.5" fill="#d0f0d0" opacity="0.8"/>
+                  <!-- Code content -->
+                  <path d="M13 22 L10 24.5 L13 27" stroke="#6a8fd4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                  <path d="M27 22 L30 24.5 L27 27" stroke="#6a8fd4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                  <line x1="23" y1="20" x2="17" y2="29" stroke="#8aaad4" stroke-width="1.8" stroke-linecap="round" opacity="0.8"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="card-text">
+              <div class="card-meta">
+                <h2 class="card-name">CodeCraft</h2>
+              </div>
+              <p class="card-category">Dev Tools</p>
+              <p class="card-desc">Build. Debug. Deploy.<br>All in one place.</p>
+            </div>
+
+            <a href="#" class="card-cta" aria-label="Explore CodeCraft">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </a>
+          </div>
+        </article>
+
+        <!-- CARD 5: MindMap -->
+        <article class="project-card card-mind" id="card-mindmap">
+          <div class="card-inner">
+            <div class="card-number" aria-label="Project number 05">05</div>
+
+            <div class="card-icon-wrap">
+              <div class="card-icon">
+                <!-- Node graph icon -->
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <!-- Center node -->
+                  <circle cx="20" cy="20" r="5" fill="#d4945a" opacity="0.9"/>
+                  <!-- Satellite nodes -->
+                  <circle cx="9" cy="12" r="3.5" fill="#e8c09a" opacity="0.8"/>
+                  <circle cx="31" cy="12" r="3.5" fill="#e8c09a" opacity="0.8"/>
+                  <circle cx="8" cy="30" r="3" fill="#d4a574" opacity="0.7"/>
+                  <circle cx="32" cy="30" r="3" fill="#d4a574" opacity="0.7"/>
+                  <circle cx="20" cy="34" r="3" fill="#e0b888" opacity="0.7"/>
+                  <!-- Edges -->
+                  <line x1="15" y1="17" x2="12" y2="14" stroke="#e0b080" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+                  <line x1="25" y1="17" x2="28" y2="14" stroke="#e0b080" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+                  <line x1="16" y1="23" x2="11" y2="28" stroke="#e0b080" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+                  <line x1="24" y1="23" x2="29" y2="28" stroke="#e0b080" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+                  <line x1="20" y1="25" x2="20" y2="31" stroke="#e0b080" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="card-text">
+              <div class="card-meta">
+                <h2 class="card-name">MindMap</h2>
+              </div>
+              <p class="card-category">Thought Organizer</p>
+              <p class="card-desc">Organize thoughts.<br>Visualize ideas.</p>
+            </div>
+
+            <a href="#" class="card-cta" aria-label="Explore MindMap">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </a>
+          </div>
+        </article>
+
+        <!-- CARD 6: Coming Soon -->
+        <article class="project-card card-future" id="card-future">
+          <div class="card-inner">
+            <div class="card-number" aria-label="Project number 06">06</div>
+
+            <div class="card-icon-wrap">
+              <div class="card-icon">
+                <!-- Sparkle / future icon -->
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M20 6 L21.8 16.5 L32 20 L21.8 23.5 L20 34 L18.2 23.5 L8 20 L18.2 16.5 Z" stroke="#b07acc" stroke-width="1.5" fill="#d4b0e8" opacity="0.5"/>
+                  <circle cx="29" cy="9" r="2.5" fill="#c8a0e0" opacity="0.6"/>
+                  <circle cx="11" cy="31" r="2" fill="#b890d0" opacity="0.5"/>
+                  <path d="M10 10 L11 14 L14 15 L11 16 L10 20 L9 16 L6 15 L9 14 Z" fill="#c8a8e0" opacity="0.6"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="card-text">
+              <div class="card-meta">
+                <h2 class="card-name">Coming Soon</h2>
+              </div>
+              <p class="card-category">Future Creation</p>
+              <p class="card-desc">Something remarkable<br>is being crafted.</p>
+            </div>
+
+            <a href="#" class="card-cta" aria-label="Stay tuned">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
+            </a>
+          </div>
+        </article>
+
+        <div class="cards-spacer"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ── Footer ───────────────────────────────────────────── -->
+  <footer class="site-footer" role="contentinfo" id="contact">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a href="#" class="nav-logo" style="margin-bottom: 0;" aria-label="Anmol Labs">
+            <div class="nav-logo-mark" aria-hidden="true">
+              <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="36" height="36" rx="9" fill="#dce8f5"/>
+                <path d="M10 26L18 10L26 26" stroke="#4a7ab5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M13 21H23" stroke="#4a7ab5" stroke-width="2.5" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="nav-logo-text">
+              <span class="nav-logo-title">Anmol Labs</span>
+              <span class="nav-logo-sub">Presents</span>
+            </div>
+          </a>
+          <p class="footer-brand-tagline">A premium ecosystem of intelligent creations, built for the future.</p>
+        </div>
+
+        <nav class="footer-links-grid" aria-label="Footer navigation">
+          <div class="footer-col">
+            <h4>Creations</h4>
+            <ul>
+              <li><a href="index.html">Gini AI</a></li>
+              <li><a href="#">EchoFy</a></li>
+              <li><a href="#">BioForge</a></li>
+              <li><a href="#">CodeCraft</a></li>
+              <li><a href="#">MindMap</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>Company</h4>
+            <ul>
+              <li><a href="#about" id="footerAbout">About</a></li>
+              <li><a href="#labs" id="footerLabs">Labs</a></li>
+              <li><a href="#">Blog</a></li>
+              <li><a href="#">Careers</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>Support</h4>
+            <ul>
+              <li><a href="#">Documentation</a></li>
+              <li><a href="#">GitHub</a></li>
+              <li><a href="#contact">Contact</a></li>
+              <li><a href="#">Status</a></li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+
+      <div class="footer-bottom">
+        <span>© 2026 Anmol Labs. All rights reserved.</span>
+        <nav class="footer-bottom-links" aria-label="Legal links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+        </nav>
+      </div>
+    </div>
+  </footer>
+
+  <script src="homepage.js"></script>
+</body>
+</html>

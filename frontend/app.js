@@ -10,7 +10,7 @@
 
 class GiniAssistantApp {
     constructor() {
-        this.api          = new GiniAPIClient('https://gini-ag1b.onrender.com');
+        this.api          = new GiniAPIClient(); // Dynamic environment URL
         this.stateManager = new AssistantStateManager();
         this.ui           = new AssistantUIManager();
         this.voiceManager = null;  // Initialised in initVoice()

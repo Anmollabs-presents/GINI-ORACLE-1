@@ -53,12 +53,12 @@ _WHAT_CAN_YOU_DO = """I can help you with quite a lot:
 • **Questions** — science, programming, general knowledge
 • **Small talk** — I'm always here to chat
 
-All of this works completely offline — no internet or API keys needed for most features. Just ask!"""
+Just ask — I'm ready to help!"""
 
 _IDENTITY = [
-    "I'm Gini — your local, offline-first AI assistant. I run entirely on your device.",
-    "I'm Gini! A locally-powered AI assistant. No cloud, no API keys, just local intelligence.",
-    "Gini here — an offline AI assistant built to control your system, answer questions, and help you get things done.",
+    "I'm Gini — your intelligent AI assistant, created by Anmol Labs. How can I help you today?",
+    "I'm Gini! Your personal AI assistant from Anmol Labs. Ask me anything.",
+    "Gini here — your AI assistant built to answer questions, control your system, and get things done.",
 ]
 
 _THANKS = [

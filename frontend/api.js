@@ -4,12 +4,29 @@
  */
 
 class GiniAPIClient {
-    constructor(baseURL = 'https://gini-ag1b.onrender.com') {
-        this.baseURL = baseURL;
+    constructor(baseURL = null) {
+        if (!baseURL) {
+            // Environment-driven configuration
+            if (typeof window !== 'undefined') {
+                const hostname = window.location.hostname;
+                if (hostname === 'localhost' || hostname === '127.0.0.1') {
+                    this.baseURL = 'http://localhost:8000';
+                } else {
+                    this.baseURL = 'https://gini-ag1b.onrender.com';
+                }
+            } else {
+                this.baseURL = 'https://gini-ag1b.onrender.com';
+            }
+        } else {
+            this.baseURL = baseURL;
+        }
+
         this.headers = {
             'Content-Type': 'application/json',
         };
-        this.timeoutMs = 10000;
+        // 130s timeout — required for large free-tier models (e.g. Nemotron 550B)
+        // which can have 60-120s queue + inference time on OpenRouter free tier
+        this.timeoutMs = 130000;
         this.pendingQueue = [];
     }
 

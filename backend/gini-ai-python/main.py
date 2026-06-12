@@ -85,21 +85,35 @@ async def root():
     }
 
 
-@app.get("/health", response_model=HealthResponse, tags=["Health"])
+@app.get("/health", tags=["Health"])
 async def health_check():
     """System health and lifecycle status."""
     from utils.health import run_health_checks
     report = run_health_checks()
     lifecycle: LifecycleManager = app.state.lifecycle
-    return HealthResponse(
-        status="healthy" if report.is_healthy else "degraded",
-        app_name=settings.app_name,
-        version=settings.app_version,
-        environment=settings.app_env,
-        checks_passed=len(report.passed),
-        checks_failed=len(report.failed),
-        timestamp=datetime.now(timezone.utc),
-    )
+
+    api_key = (settings.api_key or "").strip().strip("[]")
+    provider = (settings.ai_provider or "none").strip().strip("[]").lower()
+    
+    if api_key:
+        provider_status = "ONLINE"
+    elif provider == "none":
+        provider_status = "OFFLINE"
+    else:
+        provider_status = "DEGRADED"
+
+    return {
+        "status": "healthy" if report.is_healthy else "degraded",
+        "app_name": settings.app_name,
+        "version": settings.app_version,
+        "environment": settings.app_env,
+        "provider_status": provider_status,
+        "provider_name": provider,
+        "model_name": settings.model_name,
+        "checks_passed": len(report.passed),
+        "checks_failed": len(report.failed),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+    }
 
 
 @app.get("/status", tags=["Health"])

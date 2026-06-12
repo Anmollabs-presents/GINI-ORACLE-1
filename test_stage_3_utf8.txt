@@ -1,0 +1,35 @@
+﻿
+=== TEST 5: MEMORY RETRIEVAL ACCURACY ===
+Saving 20 distinct memories...
+Memories saved. Retrieving memory #13...
+Latency: 45.89s | Status: success
+Response: Unable to reach the AI provider. Please check your network connection or API configuration.
+python : Traceback (most recent call last):
+At line:1 char:1
++ python test_stage_3.py > test_stage_3_output.txt 2>&1
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Traceback (most recent call last)::String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  File "C:\anmol\HELL MARRY\GINI-ORACLE-1-resilience\GINI-ORACLE-1\test_stage_3.py", line 71, in <module>
+    asyncio.run(main())
+    ~~~~~~~~~~~^^^^^^^^
+  File "C:\Users\Dell\AppData\Local\Programs\Python\Python314\Lib\asyncio\runners.py", line 204, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "C:\Users\Dell\AppData\Local\Programs\Python\Python314\Lib\asyncio\runners.py", line 127, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Dell\AppData\Local\Programs\Python\Python314\Lib\asyncio\base_events.py", line 719, in 
+run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "C:\anmol\HELL MARRY\GINI-ORACLE-1-resilience\GINI-ORACLE-1\test_stage_3.py", line 67, in main
+    await test_memory_retrieval(client)
+  File "C:\anmol\HELL MARRY\GINI-ORACLE-1-resilience\GINI-ORACLE-1\test_stage_3.py", line 43, in test_memory_retrieval
+    print("  \u274c RETRIEVAL FAILED / HALLUCINATED")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Dell\AppData\Local\Programs\Python\Python314\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u274c' in position 2: character maps to <undefined>
