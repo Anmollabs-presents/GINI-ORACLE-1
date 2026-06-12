@@ -48,6 +48,20 @@ class BaseAIProvider(ABC):
         """
         pass
 
+    async def generate_response_stream(
+        self,
+        prompt: str,
+        system_instruction: Optional[str] = None,
+        history: Optional[List[Dict[str, str]]] = None,
+    ):
+        """
+        Generate a text response stream for the given prompt.
+        Yields text chunks as they become available.
+        Default implementation yields the full response.
+        """
+        full_response = await self.generate_response(prompt, system_instruction, history)
+        yield full_response
+
 
 class MockAIProvider(BaseAIProvider):
     """
@@ -60,8 +74,8 @@ class MockAIProvider(BaseAIProvider):
         system_instruction: Optional[str] = None,
         history: Optional[List[Dict[str, str]]] = None,
     ) -> str:
-        log.info(f"MockAIProvider used for prompt: {prompt[:30]}...")
-        return f"This is Gini, a memory-aware AI assistant. You said: '{prompt}'"
+        log.info(f"[ENGINE] Fallback mode active for prompt: {prompt[:30]}...")
+        return "I'm having a little trouble right now. Please try again in a moment."
 
 
 class GeminiAIProvider(BaseAIProvider):
@@ -143,14 +157,14 @@ class GeminiAIProvider(BaseAIProvider):
                     text = result["candidates"][0]["content"]["parts"][0]["text"]
                     return text.strip()
                 except (httpx.HTTPError, httpx.TimeoutException, asyncio.TimeoutError, KeyError, IndexError) as e:
-                    log.warning(f"Gemini API request failed on attempt {attempt+1}: {e}")
+                    log.warning(f"[ENGINE] Request failed on attempt {attempt+1}: {e}")
                     if attempt == retries - 1:
-                        log.error(f"Gemini API error: {e}")
+                        log.error(f"[ENGINE] Request error: {e}")
                         raise e
                     await asyncio.sleep(delay)
                     delay *= 2.0
         
-        raise RuntimeError("Failed to generate response from Gemini API.")
+        raise RuntimeError("Failed to generate response from intelligence engine.")
 
 
 class OpenAIProvider(BaseAIProvider):
@@ -223,14 +237,14 @@ class OpenAIProvider(BaseAIProvider):
                     text = result["choices"][0]["message"]["content"]
                     return text.strip()
                 except (httpx.HTTPError, httpx.TimeoutException, asyncio.TimeoutError, KeyError, IndexError) as e:
-                    log.warning(f"OpenAI API request failed on attempt {attempt+1}: {e}")
+                    log.warning(f"[ENGINE] Request failed on attempt {attempt+1}: {e}")
                     if attempt == retries - 1:
-                        log.error(f"OpenAI API error: {e}")
+                        log.error(f"[ENGINE] Request error: {e}")
                         raise e
                     await asyncio.sleep(delay)
                     delay *= 2.0
 
-        raise RuntimeError("Failed to generate response from OpenAI API.")
+        raise RuntimeError("Failed to generate response from intelligence engine.")
 
 
 class AnthropicProvider(BaseAIProvider):
@@ -303,14 +317,14 @@ class AnthropicProvider(BaseAIProvider):
                     text = result["content"][0]["text"]
                     return text.strip()
                 except (httpx.HTTPError, httpx.TimeoutException, asyncio.TimeoutError, KeyError, IndexError) as e:
-                    log.warning(f"Anthropic API request failed on attempt {attempt+1}: {e}")
+                    log.warning(f"[ENGINE] Request failed on attempt {attempt+1}: {e}")
                     if attempt == retries - 1:
-                        log.error(f"Anthropic API error: {e}")
+                        log.error(f"[ENGINE] Request error: {e}")
                         raise e
                     await asyncio.sleep(delay)
                     delay *= 2.0
 
-        raise RuntimeError("Failed to generate response from Anthropic API.")
+        raise RuntimeError("Failed to generate response from intelligence engine.")
 
 
 class OllamaAIProvider(BaseAIProvider):
@@ -382,14 +396,14 @@ class OllamaAIProvider(BaseAIProvider):
                     text = result.get("message", {}).get("content", "")
                     return text.strip()
                 except (httpx.HTTPError, httpx.TimeoutException, asyncio.TimeoutError, KeyError, IndexError) as e:
-                    log.warning(f"Ollama API request failed on attempt {attempt+1}: {e}")
+                    log.warning(f"[ENGINE] Request failed on attempt {attempt+1}: {e}")
                     if attempt == retries - 1:
-                        log.error(f"Ollama API error: {e}")
+                        log.error(f"[ENGINE] Request error: {e}")
                         raise e
                     await asyncio.sleep(delay)
                     delay *= 2.0
 
-        raise RuntimeError("Failed to generate response from Ollama API.")
+        raise RuntimeError("Failed to generate response from intelligence engine.")
 
 
 class XAIProvider(BaseAIProvider):
@@ -458,14 +472,149 @@ class XAIProvider(BaseAIProvider):
                     text = result["choices"][0]["message"]["content"]
                     return text.strip()
                 except (httpx.HTTPError, httpx.TimeoutException, asyncio.TimeoutError, KeyError, IndexError) as e:
-                    log.warning(f"xAI API request failed on attempt {attempt + 1}: {e}")
+                    log.warning(f"[ENGINE] Request failed on attempt {attempt + 1}: {e}")
                     if attempt == retries - 1:
-                        log.error(f"xAI API error: {e}")
+                        log.error(f"[ENGINE] Request error: {e}")
                         raise e
                     await asyncio.sleep(delay)
                     delay *= 2.0
 
-        raise RuntimeError("Failed to generate response from xAI API.")
+        raise RuntimeError("Failed to generate response from intelligence engine.")
+
+    async def generate_response_stream(
+        self,
+        prompt: str,
+        system_instruction: Optional[str] = None,
+        history: Optional[List[Dict[str, str]]] = None,
+    ):
+        """
+        Streaming implementation for future SSE/WebSocket support.
+        Yields tokens as they are generated.
+        """
+        # Note: This is an architectural preparation stub for streaming support.
+        # It yields the full response as a single chunk to preserve existing functionality
+        # until the frontend is upgraded to handle SSE stream reading.
+        full_response = await self.generate_response(prompt, system_instruction, history)
+        yield full_response
+
+
+class OpenRouterProvider(BaseAIProvider):
+    """
+    OpenRouter Provider — OpenAI-compatible API at openrouter.ai.
+    Requires 'HTTP-Referer' and 'X-Title' headers per OpenRouter documentation.
+    """
+
+    def __init__(
+        self,
+        api_key: str,
+        model_name: str,
+        temperature: float = 0.7,
+        max_tokens: int = 1024,
+        timeout: float = 120.0,  # 120s for large models like Nemotron 550B
+    ):
+        self.api_key = api_key
+        self.model_name = model_name
+        self.temperature = temperature
+        self.max_tokens = max_tokens
+        self.timeout = timeout
+
+    async def generate_response(
+        self,
+        prompt: str,
+        system_instruction: Optional[str] = None,
+        history: Optional[List[Dict[str, str]]] = None,
+    ) -> str:
+        messages = []
+        if system_instruction:
+            messages.append({"role": "system", "content": system_instruction})
+
+        if history:
+            for item in history:
+                role = item.get("role", "user")
+                if role == "model":
+                    role = "assistant"
+                messages.append({"role": role, "content": item.get("content", "")})
+
+        messages.append({"role": "user", "content": prompt})
+
+        payload = {
+            "model": self.model_name,
+            "messages": messages,
+            "temperature": self.temperature,
+            "max_tokens": self.max_tokens,
+        }
+
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {self.api_key}",
+            "HTTP-Referer": "https://gini-ag1b.onrender.com",
+            "X-Title": "GINI ORACLE-1",
+        }
+
+        retries = 5   # More retries for free-tier queuing
+        delay = 5.0   # Start with 5s delay — free models can queue
+        async with httpx.AsyncClient() as client:
+            for attempt in range(retries):
+                try:
+                    response = await client.post(
+                        "https://openrouter.ai/api/v1/chat/completions",
+                        json=payload, headers=headers, timeout=self.timeout
+                    )
+                    response.raise_for_status()
+                    result = response.json()
+
+                    # --- OpenRouter-specific defensive parsing ---
+                    # OpenRouter may return {"error": {...}} when model is queued/loading
+                    if "error" in result:
+                        error_msg = result["error"]
+                        if isinstance(error_msg, dict):
+                            error_msg = error_msg.get("message", str(error_msg))
+                        log.warning(f"[ENGINE] OpenRouter returned error on attempt {attempt + 1}: {error_msg}")
+                        if attempt == retries - 1:
+                            raise RuntimeError(f"OpenRouter API error: {error_msg}")
+                        await asyncio.sleep(delay)
+                        delay = min(delay * 1.5, 30.0)
+                        continue
+
+                    # Standard OpenAI-compatible response parsing
+                    choices = result.get("choices")
+                    if not choices or not isinstance(choices, list) or len(choices) == 0:
+                        log.warning(f"[ENGINE] OpenRouter returned empty choices on attempt {attempt + 1}. Response keys: {list(result.keys())}")
+                        if attempt == retries - 1:
+                            raise RuntimeError(f"OpenRouter returned no choices. Response: {json.dumps(result)[:300]}")
+                        await asyncio.sleep(delay)
+                        delay = min(delay * 1.5, 30.0)
+                        continue
+
+                    text = choices[0].get("message", {}).get("content", "")
+                    if text and text.strip():
+                        return text.strip()
+
+                    # Empty content in choices — treat as transient failure
+                    log.warning(f"[ENGINE] OpenRouter returned empty content on attempt {attempt + 1}")
+                    if attempt == retries - 1:
+                        raise RuntimeError("OpenRouter returned empty content in choices.")
+                    await asyncio.sleep(delay)
+                    delay = min(delay * 1.5, 30.0)
+
+                except (httpx.HTTPError, httpx.TimeoutException, asyncio.TimeoutError) as e:
+                    log.warning(f"[ENGINE] Request failed on attempt {attempt + 1}: {e}")
+                    if attempt == retries - 1:
+                        log.error(f"[ENGINE] Request error: {e}")
+                        raise e
+                    await asyncio.sleep(delay)
+                    delay = min(delay * 1.5, 30.0)
+
+        raise RuntimeError("Failed to generate response from intelligence engine.")
+
+    async def generate_response_stream(
+        self,
+        prompt: str,
+        system_instruction: Optional[str] = None,
+        history: Optional[List[Dict[str, str]]] = None,
+    ):
+        full_response = await self.generate_response(prompt, system_instruction, history)
+        yield full_response
 
 
 def get_ai_provider(provider_name: Optional[str] = None) -> BaseAIProvider:
@@ -487,7 +636,7 @@ def get_ai_provider(provider_name: Optional[str] = None) -> BaseAIProvider:
 
     if provider == "gemini":
         if not api_key:
-            log.warning("Gemini API key is missing. Falling back to MockAIProvider.")
+            log.warning("[ENGINE] Key not configured. Falling back to safe mode.")
             return MockAIProvider()
         return GeminiAIProvider(
             api_key=api_key,
@@ -498,7 +647,7 @@ def get_ai_provider(provider_name: Optional[str] = None) -> BaseAIProvider:
         )
     elif provider in ("openai",):
         if not api_key:
-            log.warning("OpenAI API key is missing. Falling back to MockAIProvider.")
+            log.warning("[ENGINE] Key not configured. Falling back to safe mode.")
             return MockAIProvider()
         return OpenAIProvider(
             api_key=api_key,
@@ -509,7 +658,7 @@ def get_ai_provider(provider_name: Optional[str] = None) -> BaseAIProvider:
         )
     elif provider == "anthropic":
         if not api_key:
-            log.warning("Anthropic API key is missing. Falling back to MockAIProvider.")
+            log.warning("[ENGINE] Key not configured. Falling back to safe mode.")
             return MockAIProvider()
         return AnthropicProvider(
             api_key=api_key,
@@ -520,11 +669,22 @@ def get_ai_provider(provider_name: Optional[str] = None) -> BaseAIProvider:
         )
     elif provider in ("xai", "grok", "x"):
         if not api_key:
-            log.warning("xAI API key is missing. Falling back to MockAIProvider.")
+            log.warning("[ENGINE] Key not configured. Falling back to safe mode.")
             return MockAIProvider()
         return XAIProvider(
             api_key=api_key,
             model_name=model or "grok-3-mini",
+            temperature=settings.temperature,
+            max_tokens=settings.max_tokens,
+            timeout=settings.timeout,
+        )
+    elif provider == "openrouter":
+        if not api_key:
+            log.warning("[ENGINE] Key not configured. Falling back to safe mode.")
+            return MockAIProvider()
+        return OpenRouterProvider(
+            api_key=api_key,
+            model_name=model or "nvidia/nemotron-3-ultra-550b-a55b:free",
             temperature=settings.temperature,
             max_tokens=settings.max_tokens,
             timeout=settings.timeout,
@@ -538,6 +698,6 @@ def get_ai_provider(provider_name: Optional[str] = None) -> BaseAIProvider:
             timeout=settings.timeout,
         )
     else:
-        log.warning(f"Unknown AI provider '{provider}'. Falling back to MockAIProvider.")
+        log.warning(f"[ENGINE] Unknown provider configuration. Falling back to safe mode.")
         return MockAIProvider()
 

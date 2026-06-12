@@ -55,11 +55,13 @@ class AssistantUIManager {
         this.initSpeechSliders();
     }
 
-    // ─── Workspace Tabs Configuration ──────────────────────────
+    // ─── Tab Switching with Master Theme Logic ──────────
     initTabs() {
-        const sidebarItems = document.querySelectorAll('.sidebar-item');
-        const bottomNavItems = document.querySelectorAll('#bottomNav .nav-item');
-        const panels = document.querySelectorAll('.tab-panel');
+        const sidebarItems    = document.querySelectorAll('.sidebar-item');
+        const bottomNavItems  = document.querySelectorAll('#bottomNav .nav-item');
+        const panels          = document.querySelectorAll('.tab-panel');
+        const legacyNav       = document.querySelector('.legacy-nav-items');
+        const masterNav       = document.querySelector('.chat-master-nav-items');
 
         const switchTab = (tabId) => {
             if (!tabId) return;
@@ -75,87 +77,111 @@ class AssistantUIManager {
                 else el.classList.remove('active');
             });
 
-            // Toggle panel active classes
+            // Toggle panels
             panels.forEach(p => {
-                if (p.id === `panel-${tabId}`) {
-                    p.classList.add('active');
-                } else {
-                    p.classList.remove('active');
-                }
+                p.classList.toggle('active', p.id === `panel-${tabId}`);
             });
 
-            // Trigger data load if vault tab is active
-            if (tabId === 'memory') {
-                window.app?.loadMemoryVault();
+            // Chat Master Theme: activate when chat tab selected
+            if (tabId === 'chat') {
+                document.body.classList.add('chat-master-theme');
+                if (legacyNav) legacyNav.style.display = 'none';
+                if (masterNav) masterNav.style.display  = 'block';
+                // Mirror the active state in the master nav buttons
+                masterNav?.querySelectorAll('.sidebar-item').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.tab === 'chat');
+                });
+            } else {
+                document.body.classList.remove('chat-master-theme');
+                if (legacyNav) legacyNav.style.display = 'block';
+                if (masterNav) masterNav.style.display  = 'none';
             }
+
+            // Load memory vault when selected
+            if (tabId === 'memory') window.app?.loadMemoryVault();
         };
 
-        // Bind sidebar tabs
+        // Bind legacy sidebar tabs
         sidebarItems.forEach(item => {
-            if (item.id === 'clearChatBtn') return; // Skip action button
+            if (item.id === 'clearChatBtn') return;
             item.addEventListener('click', () => switchTab(item.dataset.tab));
         });
 
-        // Bind mobile bottom nav tabs
+        // Bind mobile bottom nav
         bottomNavItems.forEach(item => {
             item.addEventListener('click', () => switchTab(item.dataset.tab));
         });
 
-        // Bind portal home action buttons
+        // Portal home action buttons
         document.getElementById('heroOpenChatBtn')?.addEventListener('click', () => switchTab('chat'));
-        document.getElementById('cardLaunchBtn')?.addEventListener('click', () => switchTab('chat'));
+        document.getElementById('cardLaunchBtn')?.addEventListener('click',    () => switchTab('chat'));
         document.getElementById('heroExploreMemoryBtn')?.addEventListener('click', () => switchTab('memory'));
 
-        // Expose switch method
         this.switchTab = switchTab;
     }
 
-    // ─── Gini Core Orb & Cursor 3D Tilting ──────────────────────
+    // ─── Gini Core Orb & Chat Parallax ──────────────────────
     initGiniCore() {
+        // Set initial message time
+        const initTimeEl = document.getElementById('initialMsgTime');
+        if (initTimeEl) {
+            initTimeEl.textContent = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+        }
+
+        // Master Design Orb Parallax — subtle mouse-tracking
+        const chatPanel = document.getElementById('panel-chat');
+        const orbBg     = document.getElementById('orbBackground');
+
+        if (chatPanel && orbBg) {
+            let targetX = 0, targetY = 0, currentX = 0, currentY = 0;
+            let rafId = null;
+
+            const tick = () => {
+                currentX += (targetX - currentX) * 0.04;
+                currentY += (targetY - currentY) * 0.04;
+                orbBg.style.transform =
+                    `translate(calc(-50% + ${currentX.toFixed(2)}px), calc(-50% + ${currentY.toFixed(2)}px))`;
+                rafId = requestAnimationFrame(tick);
+            };
+            rafId = requestAnimationFrame(tick);
+
+            chatPanel.addEventListener('mousemove', (e) => {
+                const r = chatPanel.getBoundingClientRect();
+                targetX = ((e.clientX - r.left) / r.width  - 0.5) * 22;
+                targetY = ((e.clientY - r.top)  / r.height - 0.5) * 22;
+            });
+            chatPanel.addEventListener('mouseleave', () => { targetX = 0; targetY = 0; });
+        }
+
+        // Legacy Hero Card 3D tilt (existing functionality — unchanged)
         const container = this.elements.giniCoreContainer;
-        const card = this.elements.heroCard;
+        const card      = this.elements.heroCard;
         if (!container || !card) return;
 
-        let targetX = 0, targetY = 0;
-        let currentX = 0, currentY = 0;
-
-        // Mousemove listeners for tilt variables
+        let tX = 0, tY = 0, cX = 0, cY = 0;
         card.addEventListener('mousemove', (e) => {
             const rect = card.getBoundingClientRect();
-            // Normalized offset from card center (-1.0 to 1.0)
-            const x = (e.clientX - rect.left) / rect.width - 0.5;
-            const y = (e.clientY - rect.top) / rect.height - 0.5;
-
-            // Scale displacement factors
-            targetX = x * 2;
-            targetY = y * 2;
-
+            tX = ((e.clientX - rect.left) / rect.width  - 0.5) * 2;
+            tY = ((e.clientY - rect.top)  / rect.height - 0.5) * 2;
             container.classList.add('interactive-move');
         });
-
         card.addEventListener('mouseleave', () => {
-            targetX = 0;
-            targetY = 0;
+            tX = 0; tY = 0;
             container.classList.remove('interactive-move');
         });
-
-        // Frame rendering loop
-        const drawFrame = () => {
-            // Lerp transition calculations
-            currentX += (targetX - currentX) * 0.08;
-            currentY += (targetY - currentY) * 0.08;
-
-            container.style.setProperty('--mx', currentX);
-            container.style.setProperty('--my', currentY);
-
-            // Apply 3D perspective transform matrix
-            card.style.transform = `perspective(1000px) rotateY(${currentX * 6}deg) rotateX(${currentY * -6}deg)`;
-
-            requestAnimationFrame(drawFrame);
+        const heroTick = () => {
+            cX += (tX - cX) * 0.08;
+            cY += (tY - cY) * 0.08;
+            container.style.setProperty('--mx', cX);
+            container.style.setProperty('--my', cY);
+            card.style.transform = `perspective(1000px) rotateY(${cX * 6}deg) rotateX(${cY * -6}deg)`;
+            requestAnimationFrame(heroTick);
         };
-
-        drawFrame();
+        heroTick();
     }
+
+
+
 
     // ─── Speech Slider Displays ────────────────────────────────
     initSpeechSliders() {
@@ -277,9 +303,76 @@ class AssistantUIManager {
         messageDiv.className = `message ${role}`;
 
         const p = document.createElement('p');
+        // Sanitize content and render line breaks
         p.textContent = content;
-
         messageDiv.appendChild(p);
+
+        // Timestamp
+        const timeEl = document.createElement('span');
+        timeEl.className = 'message-time';
+        timeEl.textContent = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+        messageDiv.appendChild(timeEl);
+
+        // Action bar for assistant messages
+        if (role === 'assistant') {
+            const actions = document.createElement('div');
+            actions.className = 'message-actions';
+            actions.innerHTML = [
+                `<button title="Copy" aria-label="Copy message">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                    </svg>
+                </button>`,
+                `<button title="Like" aria-label="Like message">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/>
+                        <path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>
+                    </svg>
+                </button>`,
+                `<button title="Dislike" aria-label="Dislike message">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3H10z"/>
+                        <path d="M17 2h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/>
+                    </svg>
+                </button>`,
+                `<button title="Read aloud" aria-label="Read message aloud">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+                    </svg>
+                </button>`,
+            ].join('');
+
+            // Wire action handlers
+            const [copyBtn, likeBtn, dislikeBtn, speakBtn] = actions.querySelectorAll('button');
+            copyBtn.addEventListener('click', () => {
+                navigator.clipboard?.writeText(content).then(() => {
+                    copyBtn.classList.add('active');
+                    setTimeout(() => copyBtn.classList.remove('active'), 1500);
+                });
+            });
+            likeBtn.addEventListener('click', () => {
+                likeBtn.classList.toggle('active');
+                dislikeBtn.classList.remove('active');
+            });
+            dislikeBtn.addEventListener('click', () => {
+                dislikeBtn.classList.toggle('active');
+                likeBtn.classList.remove('active');
+            });
+            speakBtn.addEventListener('click', () => {
+                if (window.speechSynthesis) {
+                    const utt = new SpeechSynthesisUtterance(content);
+                    window.speechSynthesis.speak(utt);
+                    speakBtn.classList.add('active');
+                    utt.onend = () => speakBtn.classList.remove('active');
+                }
+            });
+
+            messageDiv.appendChild(actions);
+        }
+
         this.elements.chatMessages.appendChild(messageDiv);
         this.elements.chatMessages.scrollTop = this.elements.chatMessages.scrollHeight;
     }
@@ -310,8 +403,11 @@ class AssistantUIManager {
     clearChat() {
         if (this.elements.chatMessages) {
             this.elements.chatMessages.innerHTML = `
-                <div class="message system">
-                    <p>👋 Messages cleared. I'm ready to start fresh.</p>
+                <div class="chat-date-divider"><span>Today</span></div>
+                <div class="message assistant">
+                    <p>Hi! I'm Gini.</p>
+                    <p>How can I help you today?</p>
+                    <span class="message-time">${new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</span>
                 </div>
             `;
         }
@@ -333,7 +429,7 @@ class AssistantUIManager {
         const loadingDiv = document.createElement('div');
         loadingDiv.className = 'message system loading';
         loadingDiv.id = 'loading-indicator';
-        loadingDiv.innerHTML = '<p>Thinking</p><span class="dots"></span>';
+        loadingDiv.innerHTML = '<p>Thinking</p><span class="dots"><span></span><span></span><span></span></span>';
         this.elements.chatMessages.appendChild(loadingDiv);
         this.elements.chatMessages.scrollTop = this.elements.chatMessages.scrollHeight;
     }
